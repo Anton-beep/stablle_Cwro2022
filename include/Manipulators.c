@@ -54,7 +54,7 @@ task openGraber()
 {
     taskFlag_openGraber = 1;
 
-    setMotorSpeed(grabMotor, 100);
+    setMotorSpeed(grabMotor, -100);
     sleep(1000);
     stopMotor(grabMotor, 1);
 

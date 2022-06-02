@@ -426,12 +426,12 @@ void start()
 {
     TankTurn(45);
     AccelerationDist(70);
-    AccelerationLinePIDFast(100, 1);
+    AccelerationLinePID(100);
     BrakeLeftRightMotor(1);
-    sleep(300);
+    sleep(3000);
     TankTurn(180);
     BrakeLeftRightMotor(1);
-    sleep(300);
+    sleep(3000);
     AccelerationLinePID(70);
     BrakeLeftRightMotor(1);
     startTask(motorWaterFullDown);

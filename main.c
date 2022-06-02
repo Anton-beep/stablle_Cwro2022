@@ -38,6 +38,7 @@ task main()
 	startTask(openGraber);
 
 	start();
+	sleep(50000000);
 	pair* pair_blueYellow = Rooms_blueYellow();
 	int wash_blueRoom = pair_blueYellow->first;
 	int wash_yellowRoom = pair_blueYellow->second;
