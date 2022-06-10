@@ -1,5 +1,9 @@
 void ReadIndicator(short len_millimeters, short speed){
 	BrakeLeftRightMotor(0);
+	setMotorSpeed(motorA, -speed);
+	setMotorSpeed(motorB, speed);
+
+
 	float enc_left_motor = getMotorEncoder(leftMotor);
 	float enc_right_motor = getMotorEncoder(rightMotor);
 
@@ -39,7 +43,6 @@ void ReadIndicator(short len_millimeters, short speed){
 
 		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
-		DrivePIDTacho(speed, turn_pair);
 	}
 
 	ht_results[0] = sum_rl + sum_gl + sum_bl;
@@ -47,17 +50,13 @@ void ReadIndicator(short len_millimeters, short speed){
 }
 
 void ReadLeftWash(short len_millimeters, short speed){
-	BrakeLeftRightMotor(0);
-
 	float enc_left_motor = getMotorEncoder(leftMotor);
 	float enc_right_motor = getMotorEncoder(rightMotor);
 
 	float moved_motors = 0;
 	float now_millimeters = 0;
 
-	int sum_rl = 0;
-	int sum_gl = 0;
-	int sum_bl = 0;
+	int sum_ht = 0;;
 
 	pr_error_tacho = 0;
 	results_sensors -> firstSensor = 0;
@@ -76,16 +75,14 @@ void ReadLeftWash(short len_millimeters, short speed){
 	while(now_millimeters < len_millimeters) {
 		readSensorRaw(&colorLeftSensor,  &WashInfoRawLeft);
 
-		sum_rl += colorLeftSensor.red_calibrated;
-		sum_gl += colorLeftSensor.green_calibrated;
-		sum_bl += colorLeftSensor.blue_calibrated;
+		sum_ht += colorLeftSensor.red_calibrated + colorLeftSensor.green_calibrated + colorLeftSensor.blue_calibrated;
 
 		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
-		DrivePIDTacho(speed, turn_pair);
+		DrivePIDTacho_smallKOF(speed, turn_pair, 0);
 	}
 
-	ht_results[0] = sum_rl + sum_gl + sum_bl;
+	ht_results[0] = sum_ht;
 }
 
 void ReadRightWash(short len_millimeters, short speed){
@@ -122,7 +119,7 @@ void ReadRightWash(short len_millimeters, short speed){
 
 		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
-		DrivePIDTacho(speed, turn_pair);
+		DrivePIDTacho_smallKOF(speed, turn_pair, 0);
 	}
 
 	ht_results[1] = sum_rr + sum_gr + sum_br;

@@ -1,6 +1,6 @@
 float SteerCounter(int speed)
 {
-	if ((getMotorSpeed(motorB) + fabs(motorA)) / 2 < 20)
+	if ((getMotorSpeed(motorB) + fabs(motorA)) / 2 < 32)
 	{
 		results_sensors = SensorsToPercent();
 
@@ -33,10 +33,10 @@ void DrivePID(int speed)
 	float steer = SteerCounter(speed);
 	setMotorSpeed(leftMotor, -speed + steer);
 	setMotorSpeed(rightMotor, speed + steer);
-	delay(2);
+	//delay(2);
 }
 
-void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
+void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration)
 {
 	float start_time = getTimerValue(T1);
 	float speed = start_speed;
@@ -48,7 +48,7 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 
 	while (now_millimeters < len_millimeters * speed_up_part)
 	{
-		speed = SpeedCounter(start_speed, 1, getTimerValue(T1) - start_time);
+		speed = SpeedCounter(start_speed, 1, getTimerValue(T1) - start_time, accel);
 		if (speed > max_speed_const)
 		{
 			speed = max_speed_const;
@@ -63,7 +63,7 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 	start_time = getTimerValue(T1);
 	while (now_millimeters < len_millimeters)
 	{
-		speed = SpeedCounter(max_part_speed, -1, getTimerValue(T1) - start_time);
+		speed = SpeedCounter(max_part_speed, -1, getTimerValue(T1) - start_time, accel);
 		if (speed < min_speed_const)
 		{
 			speed = min_speed_const;
@@ -76,7 +76,8 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 
 	if (line_stop == 1)
 	{
-		while ((results_sensors->firstSensor > 28) || (results_sensors->secondSensor > 28))
+		playTone(1500, 10);
+		while ((results_sensors->firstSensor > 27 || (results_sensors->secondSensor > 27))
 		{
 			DrivePID(start_speed);
 		}
@@ -144,14 +145,19 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 	}
 }
 
-void AccelerationLinePIDFast(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const)
+void AccelerationLinePIDSlow(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
 {
-	AccelerationLinePID(len_millimeters, speed_up_part, start_speed, acceleration_fast);
+	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_slow);
 }
 
-void AccelerationLinePIDSuperFast(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const)
+void AccelerationLinePIDFast(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
 {
-	AccelerationLinePID(len_millimeters, speed_up_part, start_speed, acceleration_superFast);
+	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_fast);
+}
+
+void AccelerationLinePIDSuperFast(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
+{
+	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_superFast);
 }
 
 void AccelerationDistSlow(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const)

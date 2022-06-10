@@ -21,7 +21,30 @@ float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair){
 	return steer;
 }
 
-void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair) {
+float SteerCounterTacho_smallKOF(float speed, SyncedMotorsPair MotorPair){
+	float mot_max = MotorAbsMovedDegrees(MotorPair.max_motor_element, MotorPair.max_motor_enc);
+	float mot_min = MotorAbsMovedDegrees(MotorPair.min_motor_element, MotorPair.min_motor_enc);
+	float error;
+
+	if (MotorPair.speed_cof == 0){
+		error = 0;
+	}
+	else{
+		error =  (fabs(mot_max * MotorPair.speed_cof) - mot_min) / (fabs(MotorPair.speed_cof) + 1);
+	}
+
+	float actionP = error * Kp_tacho * (speed / 60) * 0.25;
+	float actionI = (error + pr_error_tacho) * Ki_tacho * 0.25;
+	float actionD = (error - pr_error_tacho) * Kd_tacho * 0.25;
+
+	float steer = actionP + actionI + actionD;
+
+	pr_error_tacho = error;
+
+	return steer;
+}
+
+void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair, int seconds = 2) {
 	float steer = SteerCounterTacho(speed, MotorPair);
 	short sgn_speed = sgn(speed);
 
@@ -31,7 +54,20 @@ void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair) {
 	setMotorSpeed(MotorPair.max_motor_element, (speed_fab_max - steer) * sgn_speed);
 	setMotorSpeed(MotorPair.min_motor_element, (speed_fab_min + steer) * sgn_speed * sgn(MotorPair.speed_cof));
 
-	delay(2);
+	delay(seconds);
+}
+
+void DrivePIDTacho_smallKOF(int speed, SyncedMotorsPair MotorPair, int seconds = 2) {
+	float steer = SteerCounterTacho_smallKOF(speed, MotorPair);
+	short sgn_speed = sgn(speed);
+
+	float speed_fab_max = fabs(speed);
+	float speed_fab_min = fabs(speed * MotorPair.speed_cof);
+
+	setMotorSpeed(MotorPair.max_motor_element, (speed_fab_max - steer) * sgn_speed);
+	setMotorSpeed(MotorPair.min_motor_element, (speed_fab_min + steer) * sgn_speed * sgn(MotorPair.speed_cof));
+
+	delay(seconds);
 }
 
 void moveDriveSync(int deg, short speed, char stop){
@@ -54,4 +90,8 @@ void moveDriveSync(int deg, short speed, char stop){
 		DrivePIDTacho(speed, turn_pair);
 	}
 	BrakeLeftRightMotor(stop);
+}
+
+void resetErrors_PIDTacho(){
+	pr_error_tacho = 0;
 }

@@ -25,23 +25,34 @@
 
 task main()
 {
-	//check_battery();
+	int wash_blueRoom;
+	int wash_yellowRoom;
+
+	check_battery();
 
 	setSoundVolume(70);
 
 	InitMarkerCallibrationRaw();
 	InitWashCallibrationRaw();
+	InitCallibrationFamesInfoRaw();
 
 	initSensor(&colorRightSensor, HTright, HTCS2_MODE_RAW);
 	initSensor(&colorLeftSensor, HTleft, HTCS2_MODE_RAW);
 
 	startTask(openGraber);
 
+	global_water_left = 1;
+	global_water_right = 1;
+
 	start();
-	sleep(50000000);
+
 	pair* pair_blueYellow = Rooms_blueYellow();
-	int wash_blueRoom = pair_blueYellow->first;
-	int wash_yellowRoom = pair_blueYellow->second;
+	wash_blueRoom = pair_blueYellow->first;
+	wash_yellowRoom = pair_blueYellow->second;
+
+	BrakeLeftRightMotor(1);
+	eraseDisplay();
+	displayCenteredTextLine(10, "blueRoom: %d  yellowRoom: %d", wash_blueRoom, wash_yellowRoom);
 
 	moveFromFirstPairRoomsToFrames();
 	readFrames();

@@ -3,7 +3,7 @@ void check_battery()
   float volt = getBatteryVoltage();
   setSoundVolume(90);
   displayCenteredBigTextLine(12, "%f", volt);
-  if (!(volt > 8.02 && volt < 8.3))
+  if (!(volt > 8.04 && volt < 8.3))
   {
     playSound(soundDownwardTones);
     playSound(soundException);
@@ -24,6 +24,9 @@ void LCDWriteInfoHitech(tHTCS2Ptr htcs2Ptr, CalibrationPtr data)
   }
 }
 
+
+// LCDWriteInfoHitechRaw(&colorLeftSensor, &MarkerInfoRawLeft);
+// LCDWriteInfoHitechRaw(&colorRightSensor, &MarkerInfoRawRight);
 void LCDWriteInfoHitechRaw(tHTCS2Ptr htcs2Ptr, CalibrationPtr data)
 {
   eraseDisplay();
@@ -149,9 +152,10 @@ int getSign(int number)
   }
 }
 
-void wait_task(int taskFlag)
+void wait_task(int* taskFlag)
 {
-  while (taskFlag == 1){}
+  sleep(50);
+  while (*taskFlag == 1){}
 }
 
 typedef struct

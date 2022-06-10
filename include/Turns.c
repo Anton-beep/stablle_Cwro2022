@@ -150,6 +150,11 @@ void RightWheelTurn(float w_degrees)
 	PointTurn(axleTrack / 2, 0, w_degrees, 1);
 }
 
+void TankTurnSlow(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
+{
+	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turnSlow);
+}
+
 void TankTurn(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
 {
 	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turn);
@@ -211,7 +216,7 @@ void EditAngle(float need_angle)
 
 void MoveBeforeTurn(short bib = 1)
 {
-	AccelerationDist(BetweenSensorsAndMiddle - 14);
+	AccelerationDist(BetweenSensorsAndMiddle - 9);
 	if (bib == 1)
 	{
 		BrakeLeftRightMotor(1);
