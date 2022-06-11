@@ -163,3 +163,54 @@ typedef struct
   int first;
   int second;
 } pair;
+
+void EOPD_data()
+{
+  eraseDisplay();
+
+  displayCenteredTextLine(0, "HiTechnic");
+  displayCenteredBigTextLine(1, "EOPD");
+  displayCenteredTextLine(5, "Press enter to");
+  displayCenteredTextLine(6, "switch between");
+  displayCenteredTextLine(7, "ranges");
+  sleep(2000);
+  eraseDisplay();
+
+  // Create struct to hold sensor data
+  tHTEOPD eopdSensor;
+
+  // Initialise and configure struct and port
+  // Default mode for the EOPD is short range
+  initSensor(&eopdSensor, S4);
+
+  while(true) {
+    if (time1[T1] > 1000) {
+      if (eopdSensor.shortRange == false) {
+        // set the sensor to short range and display this
+      	eopdSensor.shortRange = true;
+      	configSensor(&eopdSensor);
+        displayClearTextLine(1);
+        displayTextLine(1, "Short range");
+      } else {
+        // set the sensor to long range and display this
+      	eopdSensor.shortRange = false;
+      	configSensor(&eopdSensor);
+        displayClearTextLine(1);
+        displayTextLine(1, "Long range");
+      }
+      playSound(soundBeepBeep);
+      while(bSoundActive)
+      time1[T1] = 0;
+    }
+
+      while(!getButtonPress(buttonEnter)) {
+    	  readSensor(&eopdSensor);
+
+        displayClearTextLine(3);
+        displayClearTextLine(4);
+        displayTextLine(4, "Proc:  %4d", eopdSensor.processed);
+        displayTextLine(3, "Raw :  %4d", eopdSensor.raw);
+        sleep(50);
+    }
+  }
+}

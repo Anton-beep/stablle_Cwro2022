@@ -1,27 +1,9 @@
 int get_colorWash_left(int rawHT)
 {
-    return 0;
-    if (rawHT > 2000){
-        return 4;
-    }
-    else if (rawHT > 700){
-        return 1;
-    }
-    else if (rawHT > 0){
-        return 0;
-    }
-    else {
-        return 5;
-    }
-}
-
-int get_colorWash_right(int rawHT)
-{
-    return 0;
     if (rawHT > 1000){
         return 4;
     }
-    else if (rawHT > 700){
+    else if (rawHT > 350){
         return 1;
     }
     else if (rawHT > -100){
@@ -32,10 +14,25 @@ int get_colorWash_right(int rawHT)
     }
 }
 
+int get_colorWash_right(int rawHT)
+{
+    if (rawHT > 3500){
+        return 4;
+    }
+    else if (rawHT > 900){
+        return 1;
+    }
+    else if (rawHT > 400){
+        return 0;
+    }
+    else {
+        return 5;
+    }
+}
+
 int get_colorMarker_left(int rawHTRes)
 {
-    return 2;
-    if (rawHTRes > 500){
+    if (rawHTRes > 1500){
         return 6;
     }
     return 2;
@@ -43,8 +40,7 @@ int get_colorMarker_left(int rawHTRes)
 
 int get_colorMarker_right(int rawHTRes)
 {
-    return 2;
-    if (rawHTRes > 500){
+    if (rawHTRes > 1500){
         return 6;
     }
     return 2;
@@ -81,22 +77,6 @@ int get_thirdFrame_noReading(int frame1, int frame2)
     return 10 - frame1 - frame2;
 }
 
-int angleFirstFrame = 212;
+int angleFirstFrame = 210;
 int angleSecondFrame = 180;
-int angleThirdFrame = 149;
-
-int findAngleFrameForCube(int cubeCol)
-{
-    if (cubeCol == global_frames_first)
-    {
-        return angleFirstFrame;
-    }
-    else if (cubeCol == global_frames_second)
-    {
-        return angleSecondFrame;
-    }
-    else
-    {
-        return angleThirdFrame;
-    }
-}
+int angleThirdFrame = 150;

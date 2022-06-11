@@ -20,31 +20,26 @@ int leftRoom_blue(short markerLeft)
     resetErrors_PIDTacho();
 
     BrakeLeftRightMotor(1);
-    delay(5000);
+    delay(50);
     // считали - записали
     int leftRoom_wash = get_colorWash_left(ht_results[0]);
 
     AccelerationDistSlow(23.5, 0.001, 18);
     BrakeLeftRightMotor(1);
-    delay(200);
+    delay(50);
     eraseDisplay();
     displayCenteredTextLine(8, "%d", ht_results[0]);
     displayCenteredTextLine(10, "%d", leftRoom_wash);
 
+    BrakeLeftRightMotor(1);
+    delay(2000);
+
     // AccelerationDistSlow(-10.7);
 
-    if (markerLeft == 2)
-    {
-        TankTurnSlow(-90);
-        BrakeLeftRightMotor(1);
-        sleep(100);
-    }
-    else
-    {
-        TankTurn(-90);
-        BrakeLeftRightMotor(1);
-        sleep(100);
-    }
+    TankTurnSlow(-90);
+    BrakeLeftRightMotor(1);
+    sleep(100);
+
     if (leftRoom_wash != 0)
     {
         // кубик есть, надо его съесть
@@ -52,13 +47,15 @@ int leftRoom_blue(short markerLeft)
         startTask(motorGraberFullDown);
         sleep(300);
         AccelerationDistSlow(100);
-        BrakeLeftRightMotor(0);
+        BrakeLeftRightMotor(1);
         wait_task(&taskFlag_motorGraberFullDown);
+        delay(100);
         startTask(takeCube);
         wait_task(&taskFlag_takeCube);
+        delay(50);
         if (markerLeft == 6)
         {
-            startTask(normalizeCentMotorFAST);
+            startTask(normalizeCentMotor);
         }
     }
 
@@ -72,7 +69,6 @@ int leftRoom_blue(short markerLeft)
         }
         else
         {
-            sleep(300);
             AccelerationDistSlow(70);
             BrakeLeftRightMotor(1);
             sleep(100);
@@ -92,13 +88,12 @@ int leftRoom_blue(short markerLeft)
             BrakeLeftRightMotor(1);
             startTask(normalizeCentMotor);
             sleep(300);
-            AccelerationDist(-42);
+            AccelerationDist(-30);
+            BrakeLeftRightMotor(1);
+            TankTurn(-72);
             BrakeLeftRightMotor(1);
             sleep(300);
-            TankTurn(-64);
-            BrakeLeftRightMotor(1);
-            sleep(300);
-            AccelerationDist(10);
+            AccelerationDist(20);
             AccelerationLinePIDFast(130, 1);
             MoveBeforeTurn(0);
         }
@@ -115,13 +110,12 @@ int leftRoom_blue(short markerLeft)
             BrakeLeftRightMotor(1);
             startTask(normalizeCentMotor);
             sleep(300);
-            AccelerationDist(-42);
+            AccelerationDist(-30);
+            BrakeLeftRightMotor(1);
+            TankTurn(-139);
             BrakeLeftRightMotor(1);
             sleep(300);
-            TankTurn(-130);
-            BrakeLeftRightMotor(1);
-            sleep(300);
-            AccelerationDist(10);
+            AccelerationDist(20);
             AccelerationLinePIDFast(130, 1);
             MoveBeforeTurn(0);
         }
@@ -138,7 +132,6 @@ int leftRoom_blue(short markerLeft)
             AccelerationDistSlow(61);
         }
         BrakeLeftRightMotor(1);
-        sleep(300);
         wait_task(&taskFlag_normalizeCentMotor);
 
         if (leftRoom_wash == 0)
@@ -149,19 +142,18 @@ int leftRoom_blue(short markerLeft)
         sleep(300);
         TankTurnSlow(60.5);
         BrakeLeftRightMotor(1);
-        sleep(300);
+        sleep(150);
         AccelerationDistSlow(80);
         BrakeLeftRightMotor(1);
-        sleep(300);
+        sleep(50);
         startTask(closeAndHoldGraber);
         wait_task(&taskFlag_closeAndHoldGraber);
         startTask(normalizeCentMotorFAST);
         TankTurn(93);
         BrakeLeftRightMotor(1);
-        sleep(300);
-        AccelerationDist(92);
-        BrakeLeftRightMotor(1);
         sleep(100);
+        AccelerationDist(98);
+        BrakeLeftRightMotor(1);
         if (leftRoom_wash == 0)
         {
             startTask(downGraberForONEBall);
@@ -178,7 +170,8 @@ int leftRoom_blue(short markerLeft)
         }
         startTask(normalizeCentMotorFAST);
         wait_task(&taskFlag_normalizeCentMotorFAST);
-        TankTurn(120);
+        BrakeLeftRightMotor(1);
+        TankTurn(115);
         BrakeLeftRightMotor(1);
         sleep(300);
         AccelerationDistFast(180);
@@ -199,31 +192,26 @@ int rightRoom_yellow(short markerRight)
     resetErrors_PIDTacho();
 
     BrakeLeftRightMotor(1);
-    delay(5000);
+    delay(50);
     // считали - записали
     int rightRoom_wash = get_colorWash_right(ht_results[1]);
 
-    AccelerationDistSlow(19, 0.001, 18);
+    AccelerationDistSlow(23.5, 0.001, 18);
     BrakeLeftRightMotor(1);
-    delay(200);
+    delay(50);
     eraseDisplay();
     displayCenteredTextLine(8, "%d", ht_results[1]);
     displayCenteredTextLine(10, "%d", rightRoom_wash);
 
+    BrakeLeftRightMotor(1);
+    delay(2000);
+
     // AccelerationDistSlow(-10.7);
 
-    if (markerRight == 2)
-    {
-        TankTurnSlow(90);
-        BrakeLeftRightMotor(1);
-        sleep(100);
-    }
-    else
-    {
-        TankTurn(90);
-        BrakeLeftRightMotor(1);
-        sleep(100);
-    }
+    TankTurnSlow(90);
+    BrakeLeftRightMotor(1);
+    sleep(100);
+
     if (rightRoom_wash != 0)
     {
         // кубик есть, надо его съесть
@@ -233,11 +221,13 @@ int rightRoom_yellow(short markerRight)
         AccelerationDistSlow(100);
         BrakeLeftRightMotor(0);
         wait_task(&taskFlag_motorGraberFullDown);
+        delay(100);
         startTask(takeCube);
         wait_task(&taskFlag_takeCube);
+        delay(50);
         if (markerRight == 6)
         {
-            startTask(normalizeCentMotorFAST);
+            startTask(normalizeCentMotor);
         }
     }
 
@@ -271,13 +261,12 @@ int rightRoom_yellow(short markerRight)
             BrakeLeftRightMotor(1);
             startTask(normalizeCentMotor);
             sleep(300);
-            AccelerationDist(-42);
+            AccelerationDist(-30);
+            BrakeLeftRightMotor(1);
+            TankTurn(72);
             BrakeLeftRightMotor(1);
             sleep(300);
-            TankTurn(60);
-            BrakeLeftRightMotor(1);
-            sleep(300);
-            AccelerationDist(10);
+            AccelerationDist(20);
             AccelerationLinePIDFast(130, 1);
             MoveBeforeTurn(1);
         }
@@ -294,13 +283,12 @@ int rightRoom_yellow(short markerRight)
             BrakeLeftRightMotor(1);
             startTask(normalizeCentMotor);
             sleep(300);
-            AccelerationDist(-42);
+            AccelerationDist(-30);
+            BrakeLeftRightMotor(1);
+            TankTurn(139);
             BrakeLeftRightMotor(1);
             sleep(300);
-            TankTurn(125);
-            BrakeLeftRightMotor(1);
-            sleep(300);
-            AccelerationDist(10);
+            AccelerationDist(20);
             AccelerationLinePIDFast(130, 1);
             MoveBeforeTurn(1);
         }
@@ -317,7 +305,6 @@ int rightRoom_yellow(short markerRight)
             AccelerationDistSlow(61);
         }
         BrakeLeftRightMotor(1);
-        sleep(300);
         wait_task(&taskFlag_normalizeCentMotor);
         
         if (rightRoom_wash == 0)
@@ -327,19 +314,18 @@ int rightRoom_yellow(short markerRight)
         sleep(300);
         TankTurnSlow(-60.5);
         BrakeLeftRightMotor(1);
-        sleep(300);
+        sleep(150);
         AccelerationDistSlow(80);
         BrakeLeftRightMotor(1);
-        sleep(300);
+        sleep(50);
         startTask(closeAndHoldGraber);
         wait_task(&taskFlag_closeAndHoldGraber);
         startTask(normalizeCentMotorFAST);
         TankTurn(-93);
         BrakeLeftRightMotor(1);
-        sleep(300);
-        AccelerationDist(92);
-        BrakeLeftRightMotor(1);
         sleep(100);
+        AccelerationDist(98);
+        BrakeLeftRightMotor(1);
         if (rightRoom_wash == 0)
         {
             startTask(downGraberForONEBall);
@@ -356,7 +342,8 @@ int rightRoom_yellow(short markerRight)
         }
         startTask(normalizeCentMotorFAST);
         wait_task(&taskFlag_normalizeCentMotorFAST);
-        TankTurn(-120);
+        BrakeLeftRightMotor(1);
+        TankTurn(-115);
         BrakeLeftRightMotor(1);
         sleep(300);
         AccelerationDistFast(180);
@@ -368,8 +355,7 @@ int rightRoom_yellow(short markerRight)
 
 pair *Rooms_blueYellow()
 {
-    AccelerationLinePID(160, 0, 1);
-    AccelerationDist(30, 1, 40);
+    AccelerationLinePID(160, 1, 1);
     ReadIndicator(45, 40);
     AccelerationDist(60, 1, 40);
     AccelerationLinePID(50, 1, 0.3, 40);
@@ -378,7 +364,6 @@ pair *Rooms_blueYellow()
     sleep(300);
     TankTurn(-90);
     BrakeLeftRightMotor(1);
-    sleep(300);
     //узнаем цвет и записываем
     int marker_leftRoom = get_colorMarker_left(ht_results[0]);
     int marker_rightRoom = get_colorMarker_left(ht_results[1]);
@@ -387,8 +372,6 @@ pair *Rooms_blueYellow()
     displayCenteredTextLine(10, "%d", marker_leftRoom);
     displayCenteredTextLine(12, "%d", ht_results[1]);
     displayCenteredTextLine(14, "%d", marker_rightRoom);
-
-    // sleep(9999999999);
 
     pair wash;
     // начинается левая (синяя комната)
@@ -466,7 +449,7 @@ pair *Rooms_blueYellow()
 
         BrakeLeftRightMotor(1);
         sleep(150);
-        AccelerationLinePID(146);
+        AccelerationLinePID(142);
         startTask(closeAndHoldGraber);
         AccelerationDistSlow(30);
         AccelerationLinePIDSuperFast(160, 1);
@@ -496,8 +479,8 @@ pair *Rooms_blueYellow()
     }
     BrakeLeftRightMotor(1);
     sleep(300);
-    startTask(normalizeCentMotorFAST, 255);
-    wait_task(&taskFlag_normalizeCentMotorFAST)
+    startTask(normalizeCentMotor, 255);
+    wait_task(&taskFlag_normalizeCentMotor)
         // порядок возвращаемых кубиков: ближний к основнаию робота захват - первый, дальний - второй
 
         return &wash;
@@ -548,53 +531,130 @@ void readFrames()
 
     global_frames_third = get_thirdFrame_noReading(global_frames_first, global_frames_second);
 
-    EditAngle(108);
+    TankTurn(72);
+    EditAngle(180);
+}
+
+void DropSecondCube(){
+    AccelerationDistSlow(10);
+    BrakeLeftRightMotor(1);
+    startTask(downGraberForSecondCube);
+    AbsTurn(180);
+    BrakeLeftRightMotor(1);
+    wait_task(&taskFlag_downGraberForSecondCube);
+    delay(100);
+    startTask(openSecondCube);
+    wait_task(&taskFlag_openSecondCube);
+    AccelerationDistSlow(-10);
+    BrakeLeftRightMotor(1);
+}
+
+void DropFirstCube(){
+    startTask(downGraberForFirstCube);
+
+    AbsTurn(180);
+    AccelerationDistSlow(48);
+    BrakeLeftRightMotor(1);
+    
+    wait_task(&taskFlag_downGraberForFirstCube);
+
+
+    moveMotor(grabMotor, 70, -100, 1);
+    setMotorSpeed(grabMotor, -40);
+    delay(250);
+
+    AccelerationDistSlow(-48);
+}
+
+void DriftThirdFrame(){
+    LeftWheelTurn(-60);
+    RightWheelTurn(-67)
+    AccelerationDistSlow(150);
+    BrakeLeftRightMotor(1);
+}
+
+void DriftFirstFrame(){
+    RightWheelTurn(-60);
+    LeftWheelTurn(-67)
+    AccelerationDistSlow(150);
+    BrakeLeftRightMotor(1);
+}
+
+void DriftThirdToSecond(){
+    AccelerationDistSlow(-150);
+    RightWheelTurn(60);
+    LeftWheelTurn(61);
+    BrakeLeftRightMotor(1);
+}
+
+void DriftFirstToSecond(){
+    AccelerationDistSlow(-150);
+    LeftWheelTurn(60);
+    RightWheelTurn(61);
+    BrakeLeftRightMotor(1);
+}
+
+void DropSecondCubeInFrame(int cubeCol)
+{
+    if (cubeCol == global_frames_first)
+    {
+        DriftFirstFrame();
+        DropSecondCube();
+        DriftFirstToSecond();
+    }
+    else if (cubeCol == global_frames_second)
+    {
+        DropSecondCube();
+    }
+    else
+    {
+        DriftThirdFrame();
+        DropSecondCube();
+        DriftThirdToSecond();
+    }
+}
+
+void DropFirstCubeInFrame(int cubeCol)
+{
+    if (cubeCol == global_frames_first)
+    {
+        DriftFirstFrame();
+        DropFirstCube();
+        DriftFirstToSecond();
+    }
+    else if (cubeCol == global_frames_second)
+    {
+        DropFirstCube();
+    }
+    else
+    {
+        DriftThirdFrame();
+        DropFirstCube();
+        DriftThirdToSecond();
+    }
 }
 
 void frames(int cube1, int cube2)
 {
+    EditAngle(180);
+
     displayCenteredTextLine(8, "%d", cube1);
     displayCenteredTextLine(10, "%d", cube2);
     // sleep(5000);
 
     // тот же принцип, как и у комнат, первый слот - ближний к основанию, второй - дальний
-    // второй кубик
-    startTask(downGraberForSecondCube);
-    wait_task(&taskFlag_downGraberForSecondCube);
-    AbsTurn(findAngleFrameForCube(cube2));
-    BrakeLeftRightMotor(1);
-    eraseDisplay();
-    displayCenteredTextLine(8, "%d", findAngleFrameForCube(cube2));
-    sleep(400);
-    AccelerationDistSlow(8);
-    BrakeLeftRightMotor(1);
-    sleep(400);
-    startTask(openSecondCube);
-    wait_task(&taskFlag_openSecondCube);
-    AccelerationDistSlow(-8);
-    BrakeLeftRightMotor(1);
-    sleep(400);
+    DropSecondCubeInFrame(cube2);
+    delay(200);
 
     if (cube1 != 0)
     {
-        // первый кубик
-        startTask(downGraberForFirstCube);
-        AbsTurn(findAngleFrameForCube(cube1));
-        BrakeLeftRightMotor(1);
-        sleep(400);
-        wait_task(&taskFlag_downGraberForFirstCube);
-        AccelerationDistSlow(24);
-        BrakeLeftRightMotor(1);
-        startTask(openGraber);
-        wait_task(&taskFlag_openGraber);
-        AccelerationDistSlow(-24);
-        BrakeLeftRightMotor(1);
-        sleep(400);
+        DropFirstCubeInFrame(cube1);
     }
-    BrakeLeftRightMotor(1);
+    
     startTask(normalizeCentMotorFAST);
     startTask(openGraber);
     sleep(200);
+    BrakeLeftRightMotor(1);
 }
 
 // movements без комнат
@@ -612,9 +672,8 @@ void start()
     TankTurn(185);
     BrakeLeftRightMotor(1);
     sleep(200);
-    AccelerationLinePIDSlow(20);
+    AccelerationLinePIDSlow(60);
     startTask(motorWaterFullDown);
-    AccelerationLinePIDSlow(40);
     AccelerationDistSlow(35);
     BrakeLeftRightMotor(1);
     wait_task(&taskFlag_motorWaterFullDown);
@@ -634,7 +693,7 @@ void start()
 
 void moveFromFirstPairRoomsToFrames()
 {
-    AccelerationLinePID(211);
+    AccelerationLinePID(220);
     PointTurn(230, 0, 90, 1);
     AccelerationLinePID(50, 1);
     BrakeLeftRightMotor(1);
@@ -666,16 +725,16 @@ void moveFromFramesToSecondPair()
 void moveFromSecondPairRoomsToFrames()
 {
     // вторпя комната окончена, мы на перекрестке
-    TankTurn(30);
+    TankTurn(-30);
+    BrakeLeftRightMotor(1);
+    sleep(50);
+    AccelerationDist(550);
     BrakeLeftRightMotor(1);
     sleep(450);
-    AccelerationDist(300);
+    TankTurn(-60);
     BrakeLeftRightMotor(1);
-    sleep(450);
-    TankTurn(60);
-    BrakeLeftRightMotor(1);
-    sleep(450);
-    AccelerationLinePID(50);
+    sleep(50);
+    AccelerationLinePID(10, 1);
     // работаем по рамкам
 }
 

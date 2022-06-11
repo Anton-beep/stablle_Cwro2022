@@ -91,11 +91,8 @@ task motorGraberFullDown()
     taskFlag_motorGraberFullDown = 1;
 
     setMotorSpeed(centMotor, 100);
-    sleep(100);
-    setMotorSpeed(centMotor, 100);
-    sleep(100);
-    setMotorSpeed(centMotor, 100);
-    sleep(1000);
+    delay(1000);
+
     stopMotor(centMotor, 1);
 
     taskFlag_motorGraberFullDown = 0;
@@ -151,7 +148,7 @@ task prepareGraberForCube()
 {
     taskFlag_prepareGraberForCube = 1;
 
-    moveMotor(grabMotor, 270, 100, 1);
+    moveMotor(grabMotor, 100, 100, 1);
 
     taskFlag_prepareGraberForCube = 0;
 }
@@ -160,7 +157,7 @@ task takeCube()
 {
     taskFlag_takeCube = 1;
 
-    moveMotor(grabMotor, 120, 100, 1);
+    moveMotor(grabMotor, 200, 70, 1);
 
     taskFlag_takeCube = 0;
 }
@@ -169,13 +166,12 @@ task waterOnTable()
 {
     taskFlag_waterOnTable = 1;
 
-    setMotorSpeed(centMotor, -100);
+    setMotorSpeed(centMotor, -25);
     int past_enc_centMotor = getMotorEncoder(centMotor);
     sleep(80);
     while (fabs(getMotorEncoder(centMotor)) - fabs(past_enc_centMotor) > 1)
     {
         past_enc_centMotor = getMotorEncoder(centMotor);
-        setMotorSpeed(centMotor, -100);
         sleep(80);
     }
     sleep(100);
@@ -227,7 +223,7 @@ task openSecondCube()
 {
     taskFlag_openSecondCube = 1;
 
-    moveMotor(grabMotor, 150, -100, 1);
+    moveMotor(grabMotor, 150, -15, 1);
 
     taskFlag_openSecondCube = 0;
 }
@@ -236,7 +232,7 @@ task downGraberForSecondCube()
 {
     taskFlag_downGraberForSecondCube = 1;
 
-    moveMotor(centMotor, 290, 60, 1);
+    moveMotor(centMotor, 165, 60, 1);
     sleep(500);
 
     taskFlag_downGraberForSecondCube = 0;
@@ -246,7 +242,7 @@ task downGraberForFirstCube()
 {
     taskFlag_downGraberForFirstCube = 1;
 
-    moveMotor(centMotor, -45, -70, 0);
+    moveMotor(centMotor, -20, -20, 0);
 
     taskFlag_downGraberForFirstCube = 0;
 }
