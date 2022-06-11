@@ -10,8 +10,16 @@ float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair){
 		error =  (fabs(mot_max * MotorPair.speed_cof) - mot_min) / (fabs(MotorPair.speed_cof) + 1);
 	}
 
-	float actionP = error * Kp_tacho * (speed / 60);
-	float actionI = (error + pr_error_tacho) * Ki_tacho;
+	integral_sum += error;
+	if (integral_sum > 100) {
+		integral_sum = 100;
+	}
+	else if(integral_sum < -100){
+		integral_sum = -100;
+	}
+
+	float actionP = error * Kp_tacho;
+	float actionI = integral_sum * Ki_tacho;
 	float actionD = (error - pr_error_tacho) * Kd_tacho;
 
 	float steer = actionP + actionI + actionD;
@@ -44,7 +52,7 @@ float SteerCounterTacho_smallKOF(float speed, SyncedMotorsPair MotorPair){
 	return steer;
 }
 
-void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair, int seconds = 2) {
+void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair, int seconds = 0) {
 	float steer = SteerCounterTacho(speed, MotorPair);
 	short sgn_speed = sgn(speed);
 

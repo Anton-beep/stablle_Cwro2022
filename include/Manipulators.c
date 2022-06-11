@@ -80,7 +80,7 @@ task setNormAfterWaterFullDown()
 {
     taskFlag_setNormAfterWaterFullDown = 1;
 
-    moveMotor(centMotor, 480, 30, 1);
+    moveMotor(centMotor, 250, 30, 1);
     resetMotorEncoder(centMotor);
 
     taskFlag_setNormAfterWaterFullDown = 0;
@@ -151,7 +151,7 @@ task prepareGraberForCube()
 {
     taskFlag_prepareGraberForCube = 1;
 
-    moveMotor(grabMotor, 385, 100, 1);
+    moveMotor(grabMotor, 270, 100, 1);
 
     taskFlag_prepareGraberForCube = 0;
 }
@@ -187,7 +187,7 @@ task downGraberForONEBall()
 {
     taskFlag_downGraberForONEBall = 1;
 
-    moveMotor(centMotor, 300, 70, 1);
+    moveMotor(centMotor, 200, 70, 1);
     sleep(50);
 
     taskFlag_downGraberForONEBall = 0;
@@ -197,7 +197,7 @@ task downGraberForBallAndCube()
 {
     taskFlag_downGraberForBallAndCube = 1;
 
-    moveMotor(centMotor, 245, 50, 1);
+    moveMotor(centMotor, 200, 50, 1);
     sleep(50);
 
     taskFlag_downGraberForBallAndCube = 0;
@@ -260,6 +260,7 @@ task openGraberCubeRooms()
     taskFlag_openGraberCubeRooms = 0;
 }
 
+/*
 task motorGraberDownTakeBall()
 {
     taskFlag_motorGraberDownTakeBall = 1;
@@ -268,3 +269,4 @@ task motorGraberDownTakeBall()
 
     taskFlag_motorGraberDownTakeBall = 0;
 }
+*/

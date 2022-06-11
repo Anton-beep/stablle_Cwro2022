@@ -18,12 +18,15 @@ int leftRoom_blue(short markerLeft)
     resetErrors_PIDTacho();
     ReadLeftWash(30, 18);
     resetErrors_PIDTacho();
+
+    BrakeLeftRightMotor(1);
+    delay(5000);
     // считали - записали
     int leftRoom_wash = get_colorWash_left(ht_results[0]);
 
     AccelerationDistSlow(23.5, 0.001, 18);
     BrakeLeftRightMotor(1);
-
+    delay(200);
     eraseDisplay();
     displayCenteredTextLine(8, "%d", ht_results[0]);
     displayCenteredTextLine(10, "%d", leftRoom_wash);
@@ -32,15 +35,13 @@ int leftRoom_blue(short markerLeft)
 
     if (markerLeft == 2)
     {
-        sleep(4500);
-        TankTurnSlow(-89.005);
+        TankTurnSlow(-90);
         BrakeLeftRightMotor(1);
-        sleep(200);
+        sleep(100);
     }
     else
     {
-        sleep(2000);
-        TankTurn(-89.005);
+        TankTurn(-90);
         BrakeLeftRightMotor(1);
         sleep(100);
     }
@@ -139,19 +140,17 @@ int leftRoom_blue(short markerLeft)
         BrakeLeftRightMotor(1);
         sleep(300);
         wait_task(&taskFlag_normalizeCentMotor);
+
         if (leftRoom_wash == 0)
         {
-            moveMotor(centMotor, 380, 100, 1);
+            moveMotor(centMotor, 280, 100, 1);
         }
-        else
-        {
-            moveMotor(centMotor, -100, -60, 1);
-        }
+
         sleep(300);
         TankTurnSlow(60.5);
         BrakeLeftRightMotor(1);
         sleep(300);
-        AccelerationDistSlow(67);
+        AccelerationDistSlow(80);
         BrakeLeftRightMotor(1);
         sleep(300);
         startTask(closeAndHoldGraber);
@@ -179,7 +178,7 @@ int leftRoom_blue(short markerLeft)
         }
         startTask(normalizeCentMotorFAST);
         wait_task(&taskFlag_normalizeCentMotorFAST);
-        TankTurn(113);
+        TankTurn(120);
         BrakeLeftRightMotor(1);
         sleep(300);
         AccelerationDistFast(180);
@@ -198,12 +197,15 @@ int rightRoom_yellow(short markerRight)
     resetErrors_PIDTacho();
     ReadRightWash(30, 18);
     resetErrors_PIDTacho();
+
+    BrakeLeftRightMotor(1);
+    delay(5000);
     // считали - записали
     int rightRoom_wash = get_colorWash_right(ht_results[1]);
 
     AccelerationDistSlow(19, 0.001, 18);
     BrakeLeftRightMotor(1);
-
+    delay(200);
     eraseDisplay();
     displayCenteredTextLine(8, "%d", ht_results[1]);
     displayCenteredTextLine(10, "%d", rightRoom_wash);
@@ -212,15 +214,13 @@ int rightRoom_yellow(short markerRight)
 
     if (markerRight == 2)
     {
-        sleep(4500);
-        TankTurnSlow(89.005);
+        TankTurnSlow(90);
         BrakeLeftRightMotor(1);
-        sleep(200);
+        sleep(100);
     }
     else
     {
-        sleep(2000);
-        TankTurn(89.005);
+        TankTurn(90);
         BrakeLeftRightMotor(1);
         sleep(100);
     }
@@ -319,28 +319,25 @@ int rightRoom_yellow(short markerRight)
         BrakeLeftRightMotor(1);
         sleep(300);
         wait_task(&taskFlag_normalizeCentMotor);
+        
         if (rightRoom_wash == 0)
         {
-            moveMotor(centMotor, 380, 100, 1);
-        }
-        else
-        {
-            moveMotor(centMotor, -100, -60, 1);
+            moveMotor(centMotor, 280, 100, 1);
         }
         sleep(300);
-        TankTurnSlow(-67);
+        TankTurnSlow(-60.5);
         BrakeLeftRightMotor(1);
         sleep(300);
-        AccelerationDistSlow(67);
+        AccelerationDistSlow(80);
         BrakeLeftRightMotor(1);
         sleep(300);
         startTask(closeAndHoldGraber);
         wait_task(&taskFlag_closeAndHoldGraber);
         startTask(normalizeCentMotorFAST);
-        TankTurn(-86);
+        TankTurn(-93);
         BrakeLeftRightMotor(1);
         sleep(300);
-        AccelerationDist(97);
+        AccelerationDist(92);
         BrakeLeftRightMotor(1);
         sleep(100);
         if (rightRoom_wash == 0)
@@ -359,11 +356,11 @@ int rightRoom_yellow(short markerRight)
         }
         startTask(normalizeCentMotorFAST);
         wait_task(&taskFlag_normalizeCentMotorFAST);
-        TankTurn(-113);
+        TankTurn(-120);
         BrakeLeftRightMotor(1);
         sleep(300);
         AccelerationDistFast(180);
-        AccelerationLinePID(50, 1);
+        AccelerationLinePID(70, 1);
         MoveBeforeTurn(0);
     }
     return rightRoom_wash;
@@ -376,7 +373,7 @@ pair *Rooms_blueYellow()
     ReadIndicator(45, 40);
     AccelerationDist(60, 1, 40);
     AccelerationLinePID(50, 1, 0.3, 40);
-    AccelerationDist(BetweenSensorsAndMiddle - 12.5);
+    AccelerationDist(BetweenSensorsAndMiddle);
     BrakeLeftRightMotor(1);
     sleep(300);
     TankTurn(-90);

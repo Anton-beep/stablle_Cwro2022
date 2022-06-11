@@ -33,7 +33,7 @@ void DrivePID(int speed)
 	float steer = SteerCounter(speed);
 	setMotorSpeed(leftMotor, -speed + steer);
 	setMotorSpeed(rightMotor, speed + steer);
-	//delay(2);
+	delay(2);
 }
 
 void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration)
@@ -54,7 +54,6 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 			speed = max_speed_const;
 		}
 		DrivePID(speed);
-		delay(2);
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
@@ -69,7 +68,6 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 			speed = min_speed_const;
 		}
 		DrivePID(speed);
-		delay(2);
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}

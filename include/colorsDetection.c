@@ -1,6 +1,6 @@
 int get_colorWash_left(int rawHT)
 {
-    return 4;
+    return 0;
     if (rawHT > 2000){
         return 4;
     }
@@ -17,7 +17,7 @@ int get_colorWash_left(int rawHT)
 
 int get_colorWash_right(int rawHT)
 {
-    return 5;
+    return 0;
     if (rawHT > 1000){
         return 4;
     }
