@@ -46,8 +46,8 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 
 	tMotor max_motor = leftMotor;
 	tMotor min_motor = rightMotor;
-	float start_enc_max = getMotorEncoder(leftMotor);
-	float start_enc_min = getMotorEncoder(rightMotor);
+	float start_enc_max = nMotorEncoder[leftMotor];
+	float start_enc_min = nMotorEncoder[rightMotor];
 	float max_radius = len_left_w_mm;
 	float speeds_cof = 0;
 
@@ -66,8 +66,8 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 	{
 		max_motor = rightMotor;
 		min_motor = leftMotor;
-		start_enc_max = getMotorEncoder(rightMotor);
-		start_enc_min = getMotorEncoder(leftMotor);
+		start_enc_max = nMotorEncoder[rightMotor];
+		start_enc_min = nMotorEncoder[leftMotor];
 		max_radius = len_right_w_mm;
 
 		if (len_right_w_mm == 0)
@@ -150,28 +150,12 @@ void RightWheelTurn(float w_degrees)
 	PointTurn(axleTrack / 2, 0, w_degrees, 1);
 }
 
-void TankTurnSlow(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
-{
-	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turnSlow);
-}
-
 void TankTurn(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
 {
 	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turn);
 }
 
-void TankTurnFast(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
-{
-	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turnFast);
-}
-
-void TankTurnSuperFast(float w_degrees, float speed_up_part = 0.5, float speed = min_speed_const)
-{
-	PointTurn(0, 0, -1 * w_degrees, 1, speed_up_part, speed, acceleration_turnSuperFast);
-}
-
-void AbsTurn(float need_angle)
-{
+void AbsTurn(float need_angle){
 	float w_angle = 0;
 	if (need_angle - NOW_ANGLE != 0)
 	{
@@ -216,7 +200,7 @@ void EditAngle(float need_angle)
 
 void MoveBeforeTurn(short bib = 1)
 {
-	AccelerationDist(BetweenSensorsAndMiddle - 9);
+	AccelerationDist(BetweenSensorsAndMiddle);
 	if (bib == 1)
 	{
 		BrakeLeftRightMotor(1);

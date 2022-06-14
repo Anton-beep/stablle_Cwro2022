@@ -1,38 +1,22 @@
 float SteerCounter(int speed)
 {
-	if ((getMotorSpeed(motorB) + fabs(motorA)) / 2 < 32)
-	{
-		results_sensors = SensorsToPercent();
+	results_sensors = SensorsToPercent();
 
-		float error = results_sensors->secondSensor - results_sensors->firstSensor;
+	float error = results_sensors->secondSensor - results_sensors->firstSensor;
 
-		float actionP = error * Kp_slow;
-		float actionI = (error + pr_error) * Ki_slow;
-		float actionD = (error - pr_error) * Kd_slow;
-		float steer = actionP + actionI + actionD;
-		pr_error = error;
-		return steer;
-	}
-	else
-	{
-		results_sensors = SensorsToPercent();
-
-		float error = results_sensors->secondSensor - results_sensors->firstSensor;
-
-		float actionP = error * Kp_norm;
-		float actionI = (error + pr_error) * Ki_norm;
-		float actionD = (error - pr_error) * Kd_norm;
-		float steer = actionP + actionI + actionD;
-		pr_error = error;
-		return steer;
-	}
+	float actionP = error * Kp_norm;
+	float actionI = (error + pr_error) * Ki_norm;
+	float actionD = (error - pr_error) * Kd_norm;
+	float steer = actionP + actionI + actionD;
+	pr_error = error;
+	return steer;
 }
 
 void DrivePID(int speed)
 {
 	float steer = SteerCounter(speed);
-	setMotorSpeed(leftMotor, -speed + steer);
-	setMotorSpeed(rightMotor, speed + steer);
+	motor[leftMotor] = -speed + steer;
+	motor[rightMotor] = speed + steer;
 	delay(2);
 }
 
@@ -40,8 +24,8 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 {
 	float start_time = getTimerValue(T1);
 	float speed = start_speed;
-	float enc_left_motor = getMotorEncoder(leftMotor);
-	float enc_right_motor = getMotorEncoder(rightMotor);
+	float enc_left_motor = nMotorEncoder[leftMotor];
+	float enc_right_motor = nMotorEncoder[rightMotor];
 
 	float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 	float now_millimeters = DegreesToMillimeters(moved_motors);
@@ -75,8 +59,7 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 	if (line_stop == 1)
 	{
 		playTone(1500, 10);
-		while ((results_sensors->firstSensor > 27 || (results_sensors->secondSensor > 27))
-		{
+		while ((results_sensors->firstSensor > 27) || (results_sensors->secondSensor > 27)){
 			DrivePID(start_speed);
 		}
 	}
@@ -86,8 +69,8 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 {
 	float start_time = getTimerValue(T1);
 	float speed = start_speed;
-	float enc_left_motor = getMotorEncoder(leftMotor);
-	float enc_right_motor = getMotorEncoder(rightMotor);
+	float enc_left_motor = nMotorEncoder[leftMotor];
+	float enc_right_motor = nMotorEncoder[rightMotor];
 
 	float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 	float now_millimeters = DegreesToMillimeters(moved_motors);
@@ -141,29 +124,4 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
-}
-
-void AccelerationLinePIDSlow(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
-{
-	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_slow);
-}
-
-void AccelerationLinePIDFast(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
-{
-	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_fast);
-}
-
-void AccelerationLinePIDSuperFast(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const)
-{
-	AccelerationLinePID(len_millimeters, line_stop, speed_up_part, start_speed, acceleration_superFast);
-}
-
-void AccelerationDistSlow(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const)
-{
-	AccelerationDist(len_millimeters, speed_up_part, start_speed, acceleration_slow);
-}
-
-void AccelerationDistFast(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const)
-{
-	AccelerationDist(len_millimeters, speed_up_part, start_speed, acceleration_fast);
 }

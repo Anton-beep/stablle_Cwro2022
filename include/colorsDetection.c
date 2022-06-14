@@ -32,7 +32,7 @@ int get_colorWash_right(int rawHT)
 
 int get_colorMarker_left(int rawHTRes)
 {
-    if (rawHTRes > 1500){
+    if (rawHTRes > 600){
         return 6;
     }
     return 2;
@@ -40,7 +40,7 @@ int get_colorMarker_left(int rawHTRes)
 
 int get_colorMarker_right(int rawHTRes)
 {
-    if (rawHTRes > 1500){
+    if (rawHTRes > 2500){
         return 6;
     }
     return 2;
@@ -76,7 +76,3 @@ int get_thirdFrame_noReading(int frame1, int frame2)
 {
     return 10 - frame1 - frame2;
 }
-
-int angleFirstFrame = 210;
-int angleSecondFrame = 180;
-int angleThirdFrame = 150;

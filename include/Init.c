@@ -1,14 +1,14 @@
-const float Kp_slow = 0.11;
-const float Ki_slow = 0;
-const float Kd_slow = 5;
+#define TIMER 1
+#define LOGGING 1
 
-const float Kp_norm = 0.85;
+
+const float Kp_norm = 0.9;
 const float Ki_norm = 0;
-const float Kd_norm = 19;
+const float Kd_norm = 15;
 
-const float Kp_tacho = 0.5;
-const float Ki_tacho = 0.001;
-const float Kd_tacho = 17;
+const float Kp_tacho = 5;
+const float Ki_tacho = 0.002;
+const float Kd_tacho = 20;
 
 const float axleTrack = 175.25;
 const float wheelDiameter = 80;
@@ -21,17 +21,12 @@ const float left_max_sensor = 1724;
 const float right_max_sensor = 1624;
 
 const float max_speed_const = 80;
-const float min_speed_const = 17;
+const float min_speed_const = 20;
 
-const float acceleration_slow = 0.001;      // speed_points/ms^2
-const float acceleration = 0.04;            // speed_points/ms^2
-const float acceleration_fast = 0.068;
-const float acceleration_superFast = 0.125;
+const float acceleration = 0.025;
 
-const float acceleration_turnSlow = 0.03;
-const float acceleration_turn = 0.065;
-const float acceleration_turnFast = 0.09;
-const float acceleration_turnSuperFast = 0.12;
+
+const float acceleration_turn = 0.04;
 
 long ht_results[2];
 
@@ -102,10 +97,10 @@ void InitCallibrationFamesInfoRaw() {
 	FamesSECONDRawRight.red_min = 17;
 	FamesSECONDRawRight.green_min = 37;
 	FamesSECONDRawRight.blue_min = 26;
-	
+
 
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	// я тут ошибочку допустил, калибровать минимум нужно по черной рамке, заранее сорян
+	// N? N?N?N? ??N????�??N???N? ??????N?N?N????�, ???�?�???�N??????�N?N? ??????????N??? ??N??�???? ???? N??�N??????? N??�?????�, ?�?�N??�???�?� N???N?N???
 	// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 }
 
@@ -144,7 +139,3 @@ void InitWashCallibrationRaw (){
 	WashInfoRawRight.green_min = 30;
 	WashInfoRawRight.blue_min =  22;
 }
-
-int global_frames_first;
-int global_frames_second;
-int global_frames_third;

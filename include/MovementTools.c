@@ -7,7 +7,7 @@ float SpeedCounter(float speed, int acceleration_value, int time_delta, float ac
 
 float MotorAbsMovedDegrees(tMotor motor_name, float start_value)
 {
-	float moved = fabs(getMotorEncoder(motor_name) - start_value);
+	float moved = (fabs(nMotorEncoder[motor_name]) - start_value);
 	return moved;
 }
 
@@ -55,7 +55,7 @@ void stopMotor(tMotor motor_name, char stop_type = 0)
 
 void moveMotor(tMotor motor, int deg, int speed, char stop)
 {
-	int start_deg = getMotorEncoder(motor);
+	int start_deg = nMotorEncoder[motor];
 	setMotorSpeed(motor, speed);
 	while (MotorAbsMovedDegrees(motor, start_deg) < fabs(deg))
 	{
