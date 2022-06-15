@@ -1,4 +1,4 @@
-float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair){
+float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair, short tankTurn = 0){
 	float mot_max = MotorAbsMovedDegrees(MotorPair.max_motor_element, MotorPair.max_motor_enc);
 	float mot_min = MotorAbsMovedDegrees(MotorPair.min_motor_element, MotorPair.min_motor_enc);
 	float error;
@@ -18,9 +18,9 @@ float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair){
 		integral_sum = -100;
 	}
 
-	float actionP = error * Kp_tacho;
-	float actionI = integral_sum * Ki_tacho;
-	float actionD = (error - pr_error_tacho) * Kd_tacho;
+	float actionP = tankTurn ? error * Kp_tank                    : error * Kp_tacho;
+	float actionI = tankTurn ? integral_sum * Ki_tank             : integral_sum * Ki_tacho;
+	float actionD = tankTurn ? (error - pr_error_tacho) * Kd_tank : (error - pr_error_tacho) * Kd_tacho;
 
 	float steer = actionP + actionI + actionD;
 
@@ -29,8 +29,8 @@ float SteerCounterTacho(float speed, SyncedMotorsPair MotorPair){
 	return steer;
 }
 
-void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair) {
-	float steer = SteerCounterTacho(speed, MotorPair);
+void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair, short tankTurn = 0) {
+	float steer = SteerCounterTacho(speed, MotorPair, tankTurn);
 	short sgn_speed = sgn(speed);
 
 	float speed_fab_max = fabs(speed);

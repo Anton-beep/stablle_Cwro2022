@@ -3,6 +3,8 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 	// point coords are relative from robot middle wheel base
 	// type y (1 - turn; 2 - move (forward/backward))
 
+	nMotorEncoder[leftMotor] = 0;
+	nMotorEncoder[rightMotor] = 0;
 	float right_w_radius = 0;
 	float left_w_radius = 0;
 	float start_speed = speed - 5;
@@ -46,8 +48,6 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 
 	tMotor max_motor = leftMotor;
 	tMotor min_motor = rightMotor;
-	float start_enc_max = nMotorEncoder[leftMotor];
-	float start_enc_min = nMotorEncoder[rightMotor];
 	float max_radius = len_left_w_mm;
 	float speeds_cof = 0;
 
@@ -66,8 +66,6 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 	{
 		max_motor = rightMotor;
 		min_motor = leftMotor;
-		start_enc_max = nMotorEncoder[rightMotor];
-		start_enc_min = nMotorEncoder[leftMotor];
 		max_radius = len_right_w_mm;
 
 		if (len_right_w_mm == 0)
@@ -87,8 +85,19 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 		start_speed /= fabs(speeds_cof);
 	}
 
-	float moved_motor = MotorAbsMovedDegrees(max_motor, start_enc_max);
-	float now_millimeters = DegreesToMillimeters(moved_motor);
+	float tank = 0;
+	if (point_x == 0){
+		tank = 1;
+	}
+	else{
+		tank = 0;
+	}
+
+	float start_enc_max = fabs(nMotorEncoder[max_motor]);
+	float start_enc_min = fabs(nMotorEncoder[min_motor]);
+
+	float moved_motor = 0;
+	float now_millimeters = 0;
 
 	float total_cof = ((speed * (0 - sign_speed) * speeds_way * w_cof * speeds_cof) / (speed * sign_speed * speeds_way * w_cof));
 	short speed_sign = sgn(speed * sign_speed * speeds_way * w_cof);
@@ -104,7 +113,7 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 	turn_pair.min_motor_enc = start_enc_min;
 
 	float start_time = getTimerValue(T1);
-	while (now_millimeters < max_radius * speed_up_part)
+	while (now_millimeters < fabs(max_radius * speed_up_part))
 	{
 		speed = SpeedCounter(start_speed, 1, getTimerValue(T1) - start_time, accel);
 
@@ -113,16 +122,16 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 			speed = max_speed_const;
 		}
 
-		DrivePIDTacho(speed * speed_sign, turn_pair);
+		DrivePIDTacho(speed * speed_sign, turn_pair, tank);
 
-		moved_motor = MotorAbsMovedDegrees(max_motor, start_enc_max);
+		moved_motor = fabs(MotorAbsMovedDegrees(max_motor, start_enc_max));
 		now_millimeters = DegreesToMillimeters(moved_motor);
 	}
 
 	float max_part_speed = speed;
 	start_time = getTimerValue(T1);
 
-	while (now_millimeters < max_radius)
+	while (now_millimeters < fabs(max_radius))
 	{
 		speed = SpeedCounter(max_part_speed, -1, getTimerValue(T1) - start_time, accel);
 
@@ -131,7 +140,7 @@ void PointTurn(float point_x, float point_y, float w_degrees, char type_move, fl
 			speed = min_speed_const;
 		}
 
-		DrivePIDTacho(speed * speed_sign, turn_pair);
+		DrivePIDTacho(speed * speed_sign, turn_pair, tank);
 
 		moved_motor = fabs(MotorAbsMovedDegrees(max_motor, start_enc_max));
 		now_millimeters = DegreesToMillimeters(moved_motor);

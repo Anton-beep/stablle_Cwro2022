@@ -1,27 +1,25 @@
-float SteerCounter(int speed)
-{
+void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short reverse = 0){
 	results_sensors = SensorsToPercent();
 
-	float error = results_sensors->secondSensor - results_sensors->firstSensor;
+	firstElement =  firstElement  ? firstElement  : results_sensors-> firstSensor;
+	secondElement = secondElement ? secondElement : results_sensors->secondSensor;
 
-	float actionP = error * Kp_norm;
+	float error = reverse ? secondElement - firstElement : firstElement - secondElement;
+
+	float actionP = error * Kp_norm * (speed / max_speed_const);
 	float actionI = (error + pr_error) * Ki_norm;
-	float actionD = (error - pr_error) * Kd_norm;
+	float actionD = (error - pr_error) * Kd_norm * (speed / max_speed_const);
 	float steer = actionP + actionI + actionD;
 	pr_error = error;
-	return steer;
-}
 
-void DrivePID(int speed)
-{
-	float steer = SteerCounter(speed);
 	motor[leftMotor] = -speed + steer;
 	motor[rightMotor] = speed + steer;
 	delay(2);
 }
 
-void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration)
-{
+void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration, float firstElement = 0, float secondElement = 0, short reverse = 1){
+	nMotorEncoder[leftMotor] = 0;
+	nMotorEncoder[rightMotor] = 0;
 	float start_time = getTimerValue(T1);
 	float speed = start_speed;
 	float enc_left_motor = nMotorEncoder[leftMotor];
@@ -37,7 +35,7 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 		{
 			speed = max_speed_const;
 		}
-		DrivePID(speed);
+		DrivePID(speed, firstElement, secondElement, reverse);
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
@@ -51,7 +49,7 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 		{
 			speed = min_speed_const;
 		}
-		DrivePID(speed);
+		DrivePID(speed, firstElement, secondElement, reverse);
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
@@ -59,21 +57,34 @@ void AccelerationLinePID(float len_millimeters, int line_stop = 0, float speed_u
 	if (line_stop == 1)
 	{
 		playTone(1500, 10);
-		while ((results_sensors->firstSensor > 27) || (results_sensors->secondSensor > 27)){
+		if ((firstElement == 0) && (secondElement == 0)){
+			while ((results_sensors->firstSensor > 27) || (results_sensors->secondSensor > 27)){
 			DrivePID(start_speed);
+			}
+		}
+		else if (firstElement == 0){
+			while (results_sensors->secondSensor > 80){
+			DrivePID(start_speed);
+			}
+		}
+		else{
+			while (results_sensors->firstSensor > 80){
+			DrivePID(start_speed);
+			}
 		}
 	}
 }
 
-void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration)
-{
+void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration){
+	nMotorEncoder[leftMotor] = 0;
+	nMotorEncoder[rightMotor] = 0;
 	float start_time = getTimerValue(T1);
 	float speed = start_speed;
 	float enc_left_motor = nMotorEncoder[leftMotor];
 	float enc_right_motor = nMotorEncoder[rightMotor];
 
-	float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
-	float now_millimeters = DegreesToMillimeters(moved_motors);
+	float moved_motors = 0;
+	float now_millimeters = 0;
 
 	SyncedMotorsPair turn_pair;
 
@@ -100,7 +111,7 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 
 		DrivePIDTacho(speed, turn_pair);
 
-		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
+		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
 
@@ -121,7 +132,7 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 
 		DrivePIDTacho(speed, turn_pair);
 
-		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
+		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
 }

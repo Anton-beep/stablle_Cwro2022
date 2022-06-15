@@ -32,7 +32,7 @@ int get_colorWash_right(int rawHT)
 
 int get_colorMarker_left(int rawHTRes)
 {
-    if (rawHTRes > 600){
+    if (rawHTRes > 1200){
         return 6;
     }
     return 2;
@@ -40,7 +40,7 @@ int get_colorMarker_left(int rawHTRes)
 
 int get_colorMarker_right(int rawHTRes)
 {
-    if (rawHTRes > 2500){
+    if (rawHTRes > 1200){
         return 6;
     }
     return 2;

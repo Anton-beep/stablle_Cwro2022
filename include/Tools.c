@@ -24,6 +24,17 @@ void LCDWriteInfoHitech(tHTCS2Ptr htcs2Ptr, CalibrationPtr data)
   }
 }
 
+void calibrateLeftRightHT(tHTCS2Ptr htcs2Ptrleft, tHTCS2Ptr htcs2Ptrright, CalibrationPtr data){
+  eraseDisplay();
+  while (true)
+  {
+    readSensorRaw(htcs2Ptrleft,  data);
+    readSensorRaw(htcs2Ptrright, data);
+    displayCenteredTextLine(6, "left R: %d G: %d B: %d W: %d", htcs2Ptrleft->red, htcs2Ptrleft->green, htcs2Ptrleft->blue, htcs2Ptrleft->white);
+    displayCenteredTextLine(8, "right R: %d G: %d B: %d W: %d", htcs2Ptrright->red, htcs2Ptrright->green, htcs2Ptrright->blue, htcs2Ptrright->white);
+    sleep(2);
+  }
+}
 
 // LCDWriteInfoHitechRaw(&colorLeftSensor, &MarkerInfoRawLeft);
 // LCDWriteInfoHitechRaw(&colorRightSensor, &MarkerInfoRawRight);
@@ -152,10 +163,11 @@ int getSign(int number)
   }
 }
 
-void wait_task(int* taskFlag)
+void waitTask(byte* taskFlag)
 {
-  sleep(50);
-  while (*taskFlag == 1){}
+  while (*taskFlag == 1){
+    sleep(50);
+	}
 }
 
 typedef struct

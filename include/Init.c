@@ -1,8 +1,8 @@
 #define TIMER 1
 #define LOGGING 1
+#define DEBUG 0
 
-
-const float Kp_norm = 0.9;
+const float Kp_norm = 0.25;
 const float Ki_norm = 0;
 const float Kd_norm = 15;
 
@@ -10,20 +10,24 @@ const float Kp_tacho = 5;
 const float Ki_tacho = 0.002;
 const float Kd_tacho = 20;
 
-const float axleTrack = 175.25;
+const float Kp_tank = 0.8;
+const float Ki_tank = 0.001;
+const float Kd_tank = 15;
+
+const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2310;
-const float right_min_sensor = 2272;
+const float left_min_sensor = 2276;
+const float right_min_sensor = 2300;
 
-const float left_max_sensor = 1724;
-const float right_max_sensor = 1624;
+const float left_max_sensor = 1592;
+const float right_max_sensor = 1724;
 
 const float max_speed_const = 80;
 const float min_speed_const = 20;
 
-const float acceleration = 0.025;
+const float acceleration = 0.035;
 
 
 const float acceleration_turn = 0.04;
@@ -105,21 +109,21 @@ void InitCallibrationFamesInfoRaw() {
 }
 
 void InitMarkerCallibrationRaw() {
-	MarkerInfoRawLeft.red_max =   30;
-	MarkerInfoRawLeft.green_max = 53;
-	MarkerInfoRawLeft.blue_max =  36;
+	MarkerInfoRawLeft.red_max =   104;
+	MarkerInfoRawLeft.green_max = 154;
+	MarkerInfoRawLeft.blue_max =  100;
 
-	MarkerInfoRawLeft.red_min =   18;
-	MarkerInfoRawLeft.green_min = 35;
-	MarkerInfoRawLeft.blue_min =  26;
+	MarkerInfoRawLeft.red_min =   20;
+	MarkerInfoRawLeft.green_min = 39;
+	MarkerInfoRawLeft.blue_min =  29;
 
-	MarkerInfoRawRight.red_max =   27;
-	MarkerInfoRawRight.green_max = 48;
-	MarkerInfoRawRight.blue_max =  34;
+	MarkerInfoRawRight.red_max =   119;
+	MarkerInfoRawRight.green_max = 179;
+	MarkerInfoRawRight.blue_max =  116;
 
-	MarkerInfoRawRight.red_min =   15;
-	MarkerInfoRawRight.green_min = 31;
-	MarkerInfoRawRight.blue_min =  22;
+	MarkerInfoRawRight.red_min =   17;
+	MarkerInfoRawRight.green_min = 36;
+	MarkerInfoRawRight.blue_min =  28;
 }
 
 void InitWashCallibrationRaw (){

@@ -26,8 +26,7 @@
 
 task main()
 {
-
-	/*setSoundVolume(10);
+	setSoundVolume(10);
 	check_battery();
 	setSoundVolume(10);
 
@@ -37,6 +36,11 @@ task main()
 
 	initSensor(&colorRightSensor, HTright, HTCS2_MODE_RAW);
 	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
-	*/
-	AccelerationDist(1600);
+
+
+	TakeBottles();
+	readIndicators();
+	EntranceRightRoom();
+	BrakeLeftRightMotor(1);
+	sleep(5000);
 }
