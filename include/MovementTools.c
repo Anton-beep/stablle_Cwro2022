@@ -68,3 +68,9 @@ void moveMotor(tMotor motor, int deg, int speed, char stop)
 	};
 	stopMotor(motor, stop);
 }
+
+void preTurnStop(int time = 50){
+	BrakeLeftRightMotor(1);
+    resetError();
+    delay(time);
+}

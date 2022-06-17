@@ -4,10 +4,11 @@ byte taskFlag_motorGrabFullDown = 0;
 byte taskFlag_closeAndHoldGraber = 0;
 byte taskFlag_normalizeCentMotor = 0;
 byte taskFlag_BallDrop = 0;
+byte taskFlag_prepareForCube = 0;
+byte taskFlag_prepareForBall = 0;
 
 task setNormAfterWaterFullDown(){
     taskFlag_setNormAfterWaterFullDown = 1;
-    sleep(10);
     moveMotor(centMotor, 220, 30, 1);
     resetMotorEncoder(centMotor);
     motor[centMotor] = 0;
@@ -52,12 +53,13 @@ task closeAndHoldGraber()
 
 task BallDrop(){
     taskFlag_BallDrop = 1;
+
     setMotorSpeed(centMotor, 100);
-    sleep(250);
+    sleep(350);
     stopMotor(centMotor, 1);
-    sleep(200);
-    moveMotor(grabMotor, -100, -150, 1);
-    delay(50);
+
+    moveMotor(grabMotor, -100, -190, 1);
+    sleep(350);
     taskFlag_BallDrop = 0;
 }
 
@@ -71,4 +73,32 @@ task normalizeCentMotor()
 
     motor[centMotor] = 0;
     taskFlag_normalizeCentMotor = 0;
+}
+
+task prepareForCube(){
+    taskFlag_prepareForCube = 1;
+
+    moveMotor(grabMotor, 100, 100, 1);
+    motor[grabMotor] = 0;
+
+    taskFlag_prepareForCube = 0;
+}
+
+task prepareForBall(){
+    taskFlag_prepareForBall = 1;
+
+    moveMotor(grabMotor, 300, 100, 1);
+    motor[grabMotor] = 0;
+
+    taskFlag_prepareForBall = 0;
+}
+
+void takeCube()
+{
+    moveMotor(grabMotor, 200, 70, 1);
+}
+
+void closeBall(){
+    setMotorSpeed(grabMotor, 70);
+    sleep(500);
 }

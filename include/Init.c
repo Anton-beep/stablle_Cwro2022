@@ -29,6 +29,8 @@ const float min_speed_const = 15;
 
 const float acceleration = 0.035;
 
+long left_room_indicator = -1;
+long right_room_indicator = -1;
 
 const float acceleration_turn = 0.04;
 
