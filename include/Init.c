@@ -4,13 +4,13 @@
 
 const float Kp_norm = 0.25;
 const float Ki_norm = 0;
-const float Kd_norm = 15;
+const float Kd_norm = 13.5;
 
-const float Kp_tacho = 5;
+const float Kp_tacho = 3;
 const float Ki_tacho = 0.002;
 const float Kd_tacho = 20;
 
-const float Kp_tank = 0.8;
+const float Kp_tank = 0.3;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -18,14 +18,14 @@ const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2276;
-const float right_min_sensor = 2300;
+const float left_min_sensor = 2324;
+const float right_min_sensor = 2340;
 
-const float left_max_sensor = 1592;
-const float right_max_sensor = 1724;
+const float left_max_sensor = 1724;
+const float right_max_sensor = 1656;
 
 const float max_speed_const = 80;
-const float min_speed_const = 20;
+const float min_speed_const = 15;
 
 const float acceleration = 0.035;
 
@@ -71,7 +71,7 @@ weights_struct* InitStructWeight (char *command, byte weight) {
 	return w_pointer;
 }
 
-Arraysensors *results_sensors = NULL;
+Arraysensors results_sensors;
 
 tHTCS2 colorRightSensor;
 tHTCS2 colorLeftSensor;

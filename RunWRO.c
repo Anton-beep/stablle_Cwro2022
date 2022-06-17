@@ -37,10 +37,13 @@ task main()
 	initSensor(&colorRightSensor, HTright, HTCS2_MODE_RAW);
 	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
 
-
-	TakeBottles();
+	//TakeBottles();
+	AccelerationLinePID(100, 1, 0);
 	readIndicators();
 	EntranceRightRoom();
+	RightRoom();
+	BrakeLeftRightMotor(1);
+	BallRightRoom()
 	BrakeLeftRightMotor(1);
 	sleep(5000);
 }

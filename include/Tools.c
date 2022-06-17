@@ -10,6 +10,11 @@ void check_battery()
   }
 }
 
+void resetError(){
+  pr_error = 0;
+  pr_error_tacho = 0;
+  integral_sum = 0;
+}
 void LCDWriteInfoHitech(tHTCS2Ptr htcs2Ptr, CalibrationPtr data)
 {
   eraseDisplay();
@@ -56,8 +61,10 @@ void LCDWriteInfoNXTSen()
   eraseDisplay();
   while (true)
   {
-    results_sensors = SensorsToPercent();
+    SensorsToPercent();
     displayCenteredTextLine(6, "sen1: %d sen2: %d", SensorRaw[leftSensor], SensorRaw[rightSensor]);
+    displayCenteredTextLine(8, "sen1: %d sen2: %d", results_sensors.firstSensor, results_sensors.secondSensor);
+    delay(100);
   }
 }
 

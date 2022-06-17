@@ -1,12 +1,12 @@
 void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short reverse = 0){
-	results_sensors = SensorsToPercent();
+	SensorsToPercent();
 
-	firstElement =  firstElement  ? firstElement  : results_sensors-> firstSensor;
-	secondElement = secondElement ? secondElement : results_sensors->secondSensor;
+	firstElement =  firstElement  ? firstElement  : results_sensors.firstSensor;
+	secondElement = secondElement ? secondElement : results_sensors.secondSensor;
 
 	float error = reverse ? secondElement - firstElement : firstElement - secondElement;
 
-	float actionP = error * Kp_norm * (speed / max_speed_const);
+	float actionP = error * Kp_norm * sqrt(speed / max_speed_const);
 	float actionI = (error + pr_error) * Ki_norm;
 	float actionD = (error - pr_error) * Kd_norm * (speed / max_speed_const);
 	float steer = actionP + actionI + actionD;
@@ -57,20 +57,8 @@ void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_
 	if (line_stop == 1)
 	{
 		playTone(1500, 10);
-		if ((firstElement == 0) && (secondElement == 0)){
-			while ((results_sensors->firstSensor > 27) || (results_sensors->secondSensor > 27)){
-			DrivePID(start_speed);
-			}
-		}
-		else if (firstElement == 0){
-			while (results_sensors->secondSensor > 80){
-			DrivePID(start_speed);
-			}
-		}
-		else{
-			while (results_sensors->firstSensor > 80){
-			DrivePID(start_speed);
-			}
+		while ((results_sensors.firstSensor > 20) || (results_sensors.secondSensor > 20)){
+		DrivePID(speed, firstElement, secondElement, reverse);
 		}
 	}
 }
