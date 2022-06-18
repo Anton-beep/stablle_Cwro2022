@@ -17,7 +17,7 @@ void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short 
 	delay(2);
 }
 
-void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration, float firstElement = 0, float secondElement = 0, short reverse = 1){
+void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration, float firstElement = 0, float secondElement = 0, short reverse = 1, short min_speed = min_speed_const){
 	nMotorEncoder[leftMotor] = 0;
 	nMotorEncoder[rightMotor] = 0;
 	float start_time = getTimerValue(T1);
@@ -45,9 +45,9 @@ void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_
 	while (now_millimeters < len_millimeters)
 	{
 		speed = SpeedCounter(max_part_speed, -1, getTimerValue(T1) - start_time, accel);
-		if (speed < min_speed_const)
+		if (speed < min_speed)
 		{
-			speed = min_speed_const;
+			speed = min_speed;
 		}
 		DrivePID(speed, firstElement, secondElement, reverse);
 		float moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
@@ -63,7 +63,7 @@ void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_
 	}
 }
 
-void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration){
+void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float start_speed = min_speed_const, float min_speed = min_speed_const, float accel = acceleration){
 	nMotorEncoder[leftMotor] = 0;
 	nMotorEncoder[rightMotor] = 0;
 	float start_time = getTimerValue(T1);
@@ -112,9 +112,9 @@ void AccelerationDist(float len_millimeters, float speed_up_part = 0.5, float st
 		{
 			speed = SpeedCounter(max_part_speed, sgn_speed * -1, getTimerValue(T1) - start_time, accel);
 		}
-		if (fabs(speed) < min_speed_const)
+		if (fabs(speed) < min_speed)
 		{
-			speed = min_speed_const * sgn_speed;
+			speed = min_speed * sgn_speed;
 			flag = 0;
 		}
 

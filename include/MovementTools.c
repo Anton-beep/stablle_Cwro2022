@@ -58,18 +58,16 @@ void stopMotor(tMotor motor_name, char stop_type = 0)
 	setMotorSpeed(motor_name, 0);
 }
 
-void moveMotor(tMotor motor, int deg, int speed, char stop)
+void moveMotor(tMotor motorName, int deg, int speed, char stop)
 {
-	int start_deg = fabs(nMotorEncoder[motor]);
-	setMotorSpeed(motor, speed);
-	while (MotorAbsMovedDegrees(motor, start_deg) < fabs(deg))
-	{
-		displayCenteredTextLine(8, "%d", MotorAbsMovedDegrees(motor, start_deg));
-	};
-	stopMotor(motor, stop);
+	float start_deg = fabs(nMotorEncoder[motorName]);
+	motor[motorName] = speed;
+	while (MotorAbsMovedDegrees(motorName, start_deg) < (fabs(deg) - 20)){}
+	delay(20);
+	stopMotor(motorName, stop);
 }
 
-void preTurnStop(int time = 50){
+void preTurnStop(int time = 70){
 	BrakeLeftRightMotor(1);
     resetError();
     delay(time);

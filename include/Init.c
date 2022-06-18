@@ -1,12 +1,12 @@
-#define TIMER 1
-#define LOGGING 1
+#define TIMER 0
+#define LOGGING 0
 #define DEBUG 0
 
-const float Kp_norm = 0.25;
+const float Kp_norm = 0.3;
 const float Ki_norm = 0;
 const float Kd_norm = 13.5;
 
-const float Kp_tacho = 3;
+const float Kp_tacho = 1;
 const float Ki_tacho = 0.002;
 const float Kd_tacho = 20;
 
@@ -25,9 +25,9 @@ const float left_max_sensor = 1724;
 const float right_max_sensor = 1656;
 
 const float max_speed_const = 80;
-const float min_speed_const = 15;
+const float min_speed_const = 16;
 
-const float acceleration = 0.035;
+const float acceleration = 0.04;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;

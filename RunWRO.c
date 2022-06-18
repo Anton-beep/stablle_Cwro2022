@@ -38,12 +38,16 @@ task main()
 	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
 
 	//TakeBottles();
+	startTask(motorWaterFullDown);
+	waitTask(&taskFlag_motorWaterFullDown);
+
+	startTask(setNormAfterWaterFullDown);
+	waitTask(&taskFlag_setNormAfterWaterFullDown);
+
 	AccelerationLinePID(100, 1, 0);
 	readIndicators();
-	EntranceRightRoom();
+	EntranceRightRoom(360);
 	RightRoom();
-	BrakeLeftRightMotor(1);
-	BallRightRoom()
 	BrakeLeftRightMotor(1);
 	sleep(5000);
 }
