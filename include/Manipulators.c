@@ -7,6 +7,7 @@ byte taskFlag_BallDrop = 0;
 byte taskFlag_prepareForCube = 0;
 byte taskFlag_prepareForBall = 0;
 byte taskFlag_dropBottleOnTable = 0;
+byte taskFlag_OneCubePreBall = 0;
 
 task setNormAfterWaterFullDown(){
     taskFlag_setNormAfterWaterFullDown = 1;
@@ -39,6 +40,7 @@ task motorGrabFullDown(){
     while (fabs(nMotorEncoder[centMotor]) - fabs(past_enc_centMotor) > 1){
         past_enc_centMotor = nMotorEncoder[centMotor];
         sleep(10);
+        setMotorSpeed(centMotor, 100);
     }
     taskFlag_motorGrabFullDown = 0;
     stopTask(motorGrabFullDown);
@@ -66,6 +68,23 @@ task BallDrop(){
 
     taskFlag_BallDrop = 0;
     stopTask(BallDrop);
+}
+
+task OneCubePreBall(){
+    taskFlag_OneCubePreBall = 1;
+
+    int past_enc_grabMotor = fabs(nMotorEncoder[grabMotor]);
+    motor[grabMotor] = 100;
+    sleep(100);
+    while (fabs(nMotorEncoder[grabMotor]) - fabs(past_enc_grabMotor) > 1){
+        past_enc_grabMotor = nMotorEncoder[grabMotor];
+        sleep(10);
+    }
+    stopMotor(grabMotor, 1);
+
+    moveMotor(grabMotor, -200, -100, 1);
+
+    taskFlag_OneCubePreBall = 0;
 }
 
 task normalizeCentMotor()
@@ -104,7 +123,7 @@ task prepareForBall(){
 task dropBottleOnTable(){
     taskFlag_dropBottleOnTable = 1;
     stopMotor(centMotor, 1)
-    moveMotor(centMotor, 108, -20, 0);
+    moveMotor(centMotor, 110, -20, 0);
     stopMotor(centMotor, 1);
     taskFlag_dropBottleOnTable = 0;
     stopTask(dropBottleOnTable);
@@ -112,7 +131,12 @@ task dropBottleOnTable(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 160, 70, 1);
+    moveMotor(grabMotor, 180, 70, 1);
+}
+
+void takeSecondCube(){
+    setMotorSpeed(grabMotor, 70);
+    sleep(300);
 }
 
 void closeBall(){

@@ -50,4 +50,6 @@ task main()
 	RightRoom();
 	BrakeLeftRightMotor(1);
 	sleep(5000);
+	LeftRoom();
+
 }

@@ -36,7 +36,7 @@ const float acceleration_turn = 0.04;
 
 byte left_bottle  = 1;
 byte right_bottle = 1;
-
+byte now_cubes = 0;
 long ht_results[2];
 
 float integral_sum = 0;

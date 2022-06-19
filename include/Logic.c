@@ -48,7 +48,7 @@ float readIndicators(){
     #endif
 
     AccelerationLinePID(110, 0, 0.01, motor[rightMotor]);
-    ReadIndicator(33, motor[rightMotor]);
+    ReadIndicator(33, 15);
 
     float enc_left_motor = fabs(nMotorEncoder[leftMotor]);
 	float enc_right_motor = fabs(nMotorEncoder[rightMotor]);
@@ -94,7 +94,7 @@ void getCube(short room = 1){ // 1 - Right room, -1 - Left room
     delay(100);
     startTask(motorGrabFullDown);
     AccelerationDist(20, 0, 13, 13);
-    AccelerationDist(27, 0, 12, 12);
+    AccelerationDist(27, 0, 11, 11);
     BrakeLeftRightMotor(1);
     delay(100);
     waitTask(&taskFlag_motorGrabFullDown);
@@ -103,8 +103,205 @@ void getCube(short room = 1){ // 1 - Right room, -1 - Left room
 }
 
 void BallRightRoom(byte cube = 0){
+    short add_angle = 0;
     if (cube){
         getCube();
+    }
+
+    if (cube == 0){
+        if (now_cubes){
+            startTask(OneCubePreBall);
+        }
+        else{
+            startTask(prepareForBall);
+        }
+    }
+    
+    if (cube){
+        preTurnStop();
+        delay(100);
+        AccelerationDist(-47, 0);
+        preTurnStop();
+        TankTurn(-50);
+        preTurnStop();
+    }
+    else{
+        startTask(motorGrabFullDown);
+        preTurnStop();
+        TankTurn(37);
+        preTurnStop();
+        add_angle = -3;
+    }
+    
+    waitTask(&taskFlag_motorGrabFullDown);
+    AccelerationDist(85);
+    preTurnStop();
+    closeBall();
+    startTask(normalizeCentMotor);
+    TankTurn(-98);
+    preTurnStop();
+    stopMotor(centMotor, 1);
+
+    
+    stopTask(prepareForBall);
+    stopTask(prepareForCube);
+
+    startTask(BallDrop);
+    AccelerationDist(45);
+    BrakeLeftRightMotor(1);
+    waitTask(&taskFlag_BallDrop);
+    delay(200);
+    preTurnStop();
+    
+
+    
+
+    if ((now_cubes) && (right_room_indicator == 2) && (cube)){
+        TankTurn(35);
+        preTurnStop();
+
+        stopMotor(centMotor, 1);
+        stopTask(prepareForBall);
+        stopTask(prepareForCube);
+
+        startTask(motorGrabFullDown);
+        motor[grabMotor] = -60;
+        delay(100);
+        motor[grabMotor] = 0;
+        waitTask(&taskFlag_motorGrabFullDown);
+
+        motor[grabMotor] = 80;
+        delay(200)
+        add_angle = -40
+        startTask(normalizeCentMotor);
+        delay(200)
+        motor[grabMotor] = 0;
+    }
+    else{
+        startTask(normalizeCentMotor);
+        preTurnStop();
+    }
+
+    TankTurn(-111 + add_angle);
+    preTurnStop();
+    AccelerationDist(115);
+
+    AccelerationLinePID(170, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
+}
+
+void WaterRightRoom(byte cube = 0){
+    right_bottle = 0;
+    if (cube){
+        getCube();
+        startTask(normalizeCentMotor);
+        waitTask(&taskFlag_normalizeCentMotor);
+    }
+    else{
+        preTurnStop();
+        TankTurn(90);
+        AccelerationDist(47, 0);
+        BrakeLeftRightMotor(1);
+        delay(50);
+    }
+
+    startTask(dropBottleOnTable);
+    if (right_bottle){
+        LeftWheelTurn(-30);
+    }
+    else{
+        RightWheelTurn(-25);
+    }
+
+    BrakeLeftRightMotor(1);
+    delay(100);
+	waitTask(&taskFlag_dropBottleOnTable);
+    motor[centMotor] = -10;
+    delay(100);
+
+    AccelerationDist(50);
+    motor[centMotor] = 0;
+    startTask(normalizeCentMotor);
+    preTurnStop();
+    if (right_bottle){
+        LeftWheelTurn(-63);
+        AccelerationDist(75);
+        AccelerationLinePID(160, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
+        right_bottle = 0;
+    }
+    else {
+        RightWheelTurn(22);
+        LeftWheelTurn(-98.5);
+        AccelerationDist(130);
+        AccelerationLinePID(160, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
+        left_bottle = 0;
+    }
+}
+
+float RightRoom(){
+    #if TIMER == 1
+        float start_time = getTimerValue(T2);
+    #endif
+
+    AccelerationDist(200);
+    ReadRightWash(30, 20);
+
+    BrakeLeftRightMotor(1);
+    delay(100);
+
+    int cube = get_colorWash_right(ht_results[1]);
+
+
+    right_room_indicator = 6; //key:hardcode
+    cube = 0;
+    now_cubes = 1;
+
+    if ((now_cubes) && (right_room_indicator == 2) && (cube)){
+        startTask(motorGrabFullDown);
+        TankTurn(-15);
+        BrakeLeftRightMotor(1);
+        waitTask(&taskFlag_motorGrabFullDown);
+        motor[grabMotor] = -100;
+        preTurnStop();
+        delay(100);
+        startTask(normalizeCentMotor);
+        AccelerationDist(50, 0);
+        BrakeLeftRightMotor(1);
+        delay(200);
+        preTurnStop()
+        AccelerationDist(-50, 0);
+        preTurnStop();
+        delay(50);
+        TankTurn(15);
+        motor[grabMotor] = 0;
+        preTurnStop();
+    }
+
+    AccelerationDist(-65, 0.3);
+    if (right_room_indicator == 2){
+        BallRightRoom(cube);
+    }
+    else{
+        WaterRightRoom(cube);
+    }
+
+    #if DEBUG == 1
+        displayTextLine(6, "raw %d", ht_results[1]);
+        displayTextLine(8, "color %d", cube);
+        BrakeLeftRightMotor(1);
+        delay(2000);
+    #endif
+
+    #if TIMER == 1
+        return getTimerValue(T2) - start_time;
+    #else
+        return 0;
+    #endif
+}
+
+
+void BallLeftRoom(byte cube = 0){
+    if (cube){
+        getCube(-1);
     }
 
     if (cube == 0){
@@ -155,58 +352,17 @@ void BallRightRoom(byte cube = 0){
     AccelerationLinePID(170, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
 }
 
-void WaterRightRoom(byte cube = 0){
-    if (cube){
-        getCube();
-        startTask(normalizeCentMotor);
-        waitTask(&taskFlag_normalizeCentMotor);
-    }
-    else{
-        preTurnStop();
-        TankTurn(90);
-        AccelerationDist(47, 0);
-        BrakeLeftRightMotor(1);
-        delay(50);
-    }
-
-    startTask(dropBottleOnTable);
-    if (right_bottle){
-        LeftWheelTurn(-30);
-    }
-    else{
-        RightWheelTurn(-25);
-    }
-
-    BrakeLeftRightMotor(1);
-    delay(100);
-	waitTask(&taskFlag_dropBottleOnTable);
-    motor[centMotor] = -10;
-    delay(100);
-
-    AccelerationDist(50);
-    motor[centMotor] = 0;
-    startTask(normalizeCentMotor);
-    preTurnStop();
-    if (right_bottle){
-        LeftWheelTurn(-63);
-        AccelerationDist(75);
-        AccelerationLinePID(160, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
-    }
-    else {
-        RightWheelTurn(22);
-        LeftWheelTurn(-98.5);
-        AccelerationDist(130);
-        AccelerationLinePID(160, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
-    }
-}
-
-float RightRoom(){
+float LeftRoom(){
     #if TIMER == 1
         float start_time = getTimerValue(T2);
     #endif
 
+    AccelerationDist(20, 0);
+    AccelerationLinePID(180, 0, 0.3, min_speed_const, acceleration, 70, 0, 0, 10);
+
     AccelerationDist(200);
-    ReadRightWash(30, 20);
+    ReadLeftWash(30, 20);
+    
 
     BrakeLeftRightMotor(1);
     delay(100);
@@ -215,11 +371,11 @@ float RightRoom(){
     int cube = get_colorWash_right(ht_results[1]);
 
 
-    right_room_indicator = 6; //key:hardcode
+    right_room_indicator = 2; //key:hardcode
     cube = 1;
 
     if (right_room_indicator == 2){
-        BallRightRoom(cube);
+        BallLeftRoom(cube);
     }
     else{
         WaterRightRoom(cube);

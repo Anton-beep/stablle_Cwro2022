@@ -3,7 +3,7 @@ void check_battery()
   float volt = getBatteryVoltage();
   setSoundVolume(90);
   displayCenteredBigTextLine(12, "%f", volt);
-  if (!(volt > 8.1 && volt < 8.3))
+  if (!(volt > 8.1 && volt < 8.25))
   {
     playSound(soundDownwardTones);
     playSound(soundException);

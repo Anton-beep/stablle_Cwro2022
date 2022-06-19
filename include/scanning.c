@@ -40,8 +40,8 @@ void ReadLeftWash(short len_millimeters, short speed){
 	motor[motorA] = -speed;
 	motor[motorB] = speed;
 
-	float enc_left_motor =  nMotorEncoder[leftMotor];
-	float enc_right_motor = nMotorEncoder[rightMotor];
+	float enc_left_motor = fabs(nMotorEncoder[leftMotor]);
+	float enc_right_motor = fabs(nMotorEncoder[rightMotor]);
 
 	float moved_motors = 0;
 	float now_millimeters = 0;
@@ -64,8 +64,8 @@ void ReadRightWash(short len_millimeters, short speed){
 	motor[motorA] = -speed;
 	motor[motorB] = speed;
 
-	float enc_left_motor = nMotorEncoder[leftMotor];
-	float enc_right_motor = nMotorEncoder[rightMotor];
+	float enc_left_motor = fabs(nMotorEncoder[leftMotor]);
+	float enc_right_motor = fabs(nMotorEncoder[rightMotor]);
 
 	float moved_motors = 0;
 	float now_millimeters = 0;
