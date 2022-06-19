@@ -88,23 +88,7 @@ float readIndicators(){
 
 void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
     preTurnStop();
-    TankTurn(90);
-    preTurnStop();
-    startTask(prepareForCube);
-    delay(100);
-    startTask(motorGrabFullDown);
-    AccelerationDist(20, 0, 13, 13);
-    AccelerationDist(27, 0, 11, 11);
-    BrakeLeftRightMotor(1);
-    delay(100);
-    waitTask(&taskFlag_motorGrabFullDown);
-    waitTask(&taskFlag_prepareForCube);
-    takeCube();
-}
-
-void getCubeLeft(short angle = -90){ // 1 - Right room, -1 - Left room
-    preTurnStop();
-    TankTurn(-180);
+    TankTurn(angle);
     preTurnStop();
     startTask(prepareForCube);
     delay(100);
@@ -132,7 +116,7 @@ void BallRightRoom(byte cube = 0){
             startTask(prepareForBall);
         }
     }
-    
+
     if (cube){
         preTurnStop();
         delay(100);
@@ -148,7 +132,7 @@ void BallRightRoom(byte cube = 0){
         preTurnStop();
         add_angle = -3;
     }
-    
+
     waitTask(&taskFlag_motorGrabFullDown);
     AccelerationDist(85);
     preTurnStop();
@@ -158,7 +142,7 @@ void BallRightRoom(byte cube = 0){
     preTurnStop();
     stopMotor(centMotor, 1);
 
-    
+
     stopTask(prepareForBall);
     stopTask(prepareForCube);
 
@@ -168,9 +152,9 @@ void BallRightRoom(byte cube = 0){
     waitTask(&taskFlag_BallDrop);
     delay(200);
     preTurnStop();
-    
 
-    
+
+
 
     if ((now_cubes) && (right_room_indicator == 2) && (cube)){
         TankTurn(35);
@@ -314,10 +298,11 @@ float RightRoom(){
 }
 
 void BallLeftRoom(byte cube = 0){
+
     short add_angle = 0;
 
     if (cube){
-        getCubeLeft(-90);
+        getCube(-90);
     }
 
     if (cube == 0){
@@ -328,7 +313,7 @@ void BallLeftRoom(byte cube = 0){
             startTask(prepareForBall);
         }
     }
-    
+
     if (cube){
         preTurnStop();
         delay(100);
@@ -344,7 +329,7 @@ void BallLeftRoom(byte cube = 0){
         preTurnStop();
         add_angle = -3;
     }
-    
+
     waitTask(&taskFlag_motorGrabFullDown);
     AccelerationDist(85);
     preTurnStop();
@@ -354,7 +339,7 @@ void BallLeftRoom(byte cube = 0){
     preTurnStop();
     stopMotor(centMotor, 1);
 
-    
+
     stopTask(prepareForBall);
     stopTask(prepareForCube);
 
@@ -364,9 +349,9 @@ void BallLeftRoom(byte cube = 0){
     waitTask(&taskFlag_BallDrop);
     delay(200);
     preTurnStop();
-    
 
-    
+
+
 
     if ((now_cubes) && (right_room_indicator == 2) && (cube)){
         TankTurn(-35);
@@ -398,5 +383,66 @@ void BallLeftRoom(byte cube = 0){
     preTurnStop();
     AccelerationDist(115);
 
-    AccelerationLinePID(170, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
+    AccelerationLinePID(170, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
+}
+
+float LeftRoom(){
+    #if TIMER == 1
+        float start_time = getTimerValue(T2);
+    #endif
+
+    AccelerationDist(20, 0);
+    AccelerationLinePID(180, 0, 0.3, min_speed_const, acceleration, 70, 0, 0, 10);
+
+    AccelerationDist(200);
+    ReadLeftWash(30, 20);
+
+    int cube = get_colorWash_left(ht_results[0]);
+
+
+    left_room_indicator = 2; //key:hardcode
+    cube = 1;
+    now_cubes = 1;
+
+    if ((now_cubes) && (left_room_indicator == 2) && (cube)){
+        startTask(motorGrabFullDown);
+        TankTurn(15);
+        BrakeLeftRightMotor(1);
+        waitTask(&taskFlag_motorGrabFullDown);
+        motor[grabMotor] = -100;
+        preTurnStop();
+        delay(100);
+        startTask(normalizeCentMotor);
+        AccelerationDist(50, 0);
+        BrakeLeftRightMotor(1);
+        delay(200);
+        preTurnStop()
+        AccelerationDist(-50, 0);
+        preTurnStop();
+        delay(50);
+        TankTurn(-15);
+        motor[grabMotor] = 0;
+        preTurnStop();
+    }
+
+    AccelerationDist(-65, 0.3);
+    if (right_room_indicator == 2){
+        BallLeftRoom(cube);
+    }
+    else{
+        WaterRightRoom(cube);
+    }
+
+    #if DEBUG == 1
+        displayTextLine(6, "raw %d", ht_results[1]);
+        displayTextLine(8, "color %d", cube);
+        BrakeLeftRightMotor(1);
+        delay(2000);
+    #endif
+
+    #if TIMER == 1
+        return getTimerValue(T2) - start_time;
+    #else
+        return 0;
+    #endif
 }

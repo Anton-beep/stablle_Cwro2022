@@ -48,6 +48,7 @@ task main()
 	AccelerationLinePID(100, 1, 0);
 	readIndicators();
 	RightRoom();
+	LeftRoom();
 	BrakeLeftRightMotor(1);
 	sleep(2000);
 }
