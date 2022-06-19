@@ -7,8 +7,6 @@ void writeIndicators(long leftValue, long rightValue){
   char * right = "Right Indicator:";
   int strlen2 = strlen(right);
 
-  char readBuffer[128];
-
   long fileHandle = fileOpenWrite(filename);
 
   fileWriteData(fileHandle, left,  strlen1 + 1);
@@ -19,4 +17,3 @@ void writeIndicators(long leftValue, long rightValue){
 
   fileClose(fileHandle);
 }
-  

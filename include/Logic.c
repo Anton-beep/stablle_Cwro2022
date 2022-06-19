@@ -86,10 +86,26 @@ float readIndicators(){
     #endif
 }
 
-void getCube(short room = 1){ // 1 - Right room, -1 - Left room
+void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
     preTurnStop();
-    TankTurn(90 * room);
+    TankTurn(90);
+    preTurnStop();
+    startTask(prepareForCube);
+    delay(100);
+    startTask(motorGrabFullDown);
+    AccelerationDist(20, 0, 13, 13);
+    AccelerationDist(27, 0, 11, 11);
     BrakeLeftRightMotor(1);
+    delay(100);
+    waitTask(&taskFlag_motorGrabFullDown);
+    waitTask(&taskFlag_prepareForCube);
+    takeCube();
+}
+
+void getCubeLeft(short angle = -90){ // 1 - Right room, -1 - Left room
+    preTurnStop();
+    TankTurn(-180);
+    preTurnStop();
     startTask(prepareForCube);
     delay(100);
     startTask(motorGrabFullDown);
@@ -190,7 +206,6 @@ void BallRightRoom(byte cube = 0){
 }
 
 void WaterRightRoom(byte cube = 0){
-    right_bottle = 0;
     if (cube){
         getCube();
         startTask(normalizeCentMotor);
@@ -251,9 +266,9 @@ float RightRoom(){
     int cube = get_colorWash_right(ht_results[1]);
 
 
-    right_room_indicator = 6; //key:hardcode
-    cube = 0;
-    now_cubes = 1;
+    right_room_indicator = 2; //key:hardcode
+    cube = 1;
+    now_cubes = 0;
 
     if ((now_cubes) && (right_room_indicator == 2) && (cube)){
         startTask(motorGrabFullDown);
@@ -298,14 +313,20 @@ float RightRoom(){
     #endif
 }
 
-
 void BallLeftRoom(byte cube = 0){
+    short add_angle = 0;
+
     if (cube){
-        getCube(-1);
+        getCubeLeft(-90);
     }
 
     if (cube == 0){
-        startTask(prepareForBall);
+        if (now_cubes){
+            startTask(OneCubePreBall);
+        }
+        else{
+            startTask(prepareForBall);
+        }
     }
     
     if (cube){
@@ -313,23 +334,23 @@ void BallLeftRoom(byte cube = 0){
         delay(100);
         AccelerationDist(-47, 0);
         preTurnStop();
-        TankTurn(-50);
+        TankTurn(50);
         preTurnStop();
     }
     else{
         startTask(motorGrabFullDown);
         preTurnStop();
-        TankTurn(37);
+        TankTurn(-37);
         preTurnStop();
+        add_angle = -3;
     }
     
-    
     waitTask(&taskFlag_motorGrabFullDown);
-    AccelerationDist(100);
+    AccelerationDist(85);
     preTurnStop();
     closeBall();
     startTask(normalizeCentMotor);
-    TankTurn(-98);
+    TankTurn(98);
     preTurnStop();
     stopMotor(centMotor, 1);
 
@@ -338,59 +359,44 @@ void BallLeftRoom(byte cube = 0){
     stopTask(prepareForCube);
 
     startTask(BallDrop);
-    AccelerationDist(40);
+    AccelerationDist(45);
     BrakeLeftRightMotor(1);
     waitTask(&taskFlag_BallDrop);
     delay(200);
     preTurnStop();
-    startTask(normalizeCentMotor);
-    preTurnStop();
-    TankTurn(-109);
+    
+
+    
+
+    if ((now_cubes) && (right_room_indicator == 2) && (cube)){
+        TankTurn(-35);
+        preTurnStop();
+
+        stopMotor(centMotor, 1);
+        stopTask(prepareForBall);
+        stopTask(prepareForCube);
+
+        startTask(motorGrabFullDown);
+        motor[grabMotor] = -60;
+        delay(100);
+        motor[grabMotor] = 0;
+        waitTask(&taskFlag_motorGrabFullDown);
+
+        motor[grabMotor] = 80;
+        delay(200)
+        add_angle = 40
+        startTask(normalizeCentMotor);
+        delay(200)
+        motor[grabMotor] = 0;
+    }
+    else{
+        startTask(normalizeCentMotor);
+        preTurnStop();
+    }
+
+    TankTurn(111 + add_angle);
     preTurnStop();
     AccelerationDist(115);
 
     AccelerationLinePID(170, 1, 0.5, min_speed_const, acceleration, 70, 0, 0, 10);
-}
-
-float LeftRoom(){
-    #if TIMER == 1
-        float start_time = getTimerValue(T2);
-    #endif
-
-    AccelerationDist(20, 0);
-    AccelerationLinePID(180, 0, 0.3, min_speed_const, acceleration, 70, 0, 0, 10);
-
-    AccelerationDist(200);
-    ReadLeftWash(30, 20);
-    
-
-    BrakeLeftRightMotor(1);
-    delay(100);
-    AccelerationDist(-55, 0.3);
-
-    int cube = get_colorWash_right(ht_results[1]);
-
-
-    right_room_indicator = 2; //key:hardcode
-    cube = 1;
-
-    if (right_room_indicator == 2){
-        BallLeftRoom(cube);
-    }
-    else{
-        WaterRightRoom(cube);
-    }
-
-    #if DEBUG == 1
-        displayTextLine(6, "raw %d", ht_results[1]);
-        displayTextLine(8, "color %d", cube);
-        BrakeLeftRightMotor(1);
-        delay(2000);
-    #endif
-
-    #if TIMER == 1
-        return getTimerValue(T2) - start_time;
-    #else
-        return 0;
-    #endif
 }

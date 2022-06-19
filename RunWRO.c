@@ -49,7 +49,5 @@ task main()
 	readIndicators();
 	RightRoom();
 	BrakeLeftRightMotor(1);
-	sleep(5000);
-	LeftRoom();
-
+	sleep(2000);
 }
