@@ -2,7 +2,7 @@
 #define LOGGING 0
 #define DEBUG 0
 
-const float Kp_norm = 0.3;
+const float Kp_norm = 0.34;
 const float Ki_norm = 0;
 const float Kd_norm = 13.5;
 
@@ -18,11 +18,11 @@ const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2324;
-const float right_min_sensor = 2340;
+const float left_min_sensor = 2316;
+const float right_min_sensor = 2300;
 
 const float left_max_sensor = 1724;
-const float right_max_sensor = 1656;
+const float right_max_sensor = 1684;
 
 const float max_speed_const = 80;
 const float min_speed_const = 16;
@@ -33,6 +33,9 @@ long left_room_indicator = -1;
 long right_room_indicator = -1;
 
 const float acceleration_turn = 0.04;
+
+byte left_bottle  = 1;
+byte right_bottle = 1;
 
 long ht_results[2];
 

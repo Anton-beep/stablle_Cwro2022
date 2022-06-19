@@ -9,9 +9,9 @@ void SensorsToPercent()
 	if (results_sensors.secondSensor > 100)
 		results_sensors.secondSensor = 100;
 
-	if (results_sensors.secondSensor < -100)
-		results_sensors.secondSensor = -100;
+	if (results_sensors.secondSensor < 0)
+		results_sensors.secondSensor = 0;
 
-	if (results_sensors.firstSensor < -100)
-		results_sensors.firstSensor = -100;
+	if (results_sensors.firstSensor < 0)
+		results_sensors.firstSensor = 0;
 }

@@ -44,9 +44,9 @@ task main()
 	startTask(setNormAfterWaterFullDown);
 	waitTask(&taskFlag_setNormAfterWaterFullDown);
 
+	delay(2000);
 	AccelerationLinePID(100, 1, 0);
 	readIndicators();
-	EntranceRightRoom(360);
 	RightRoom();
 	BrakeLeftRightMotor(1);
 	sleep(5000);
