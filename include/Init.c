@@ -2,9 +2,9 @@
 #define LOGGING 0
 #define DEBUG 0
 
-const float Kp_norm = 0.34;
+const float Kp_norm = 0.25;
 const float Ki_norm = 0;
-const float Kd_norm = 13.5;
+const float Kd_norm = 10;
 
 const float Kp_tacho = 1;
 const float Ki_tacho = 0.002;

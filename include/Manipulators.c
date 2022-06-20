@@ -61,10 +61,10 @@ task closeAndHoldGraber()
 task BallDrop(){
     taskFlag_BallDrop = 1;
 
-    stopMotor(centMotor, 1)
+    stopMotor(centMotor, 1);
     moveMotor(centMotor, 190, 100, 1);
     stopMotor(centMotor, 1);
-    moveMotor(grabMotor, -100, -100, 1);
+    moveMotor(grabMotor, -140, -100, 1);
 
     taskFlag_BallDrop = 0;
     stopTask(BallDrop);
@@ -111,7 +111,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 150, 100, 1);
+    moveMotor(grabMotor, 155, 100, 1);
     motor[grabMotor] = 0;
     stopMotor(grabMotor, 1);
 
@@ -131,7 +131,7 @@ task prepareForBall(){
 
 task dropBottleOnTable(){
     taskFlag_dropBottleOnTable = 1;
-    stopMotor(centMotor, 1)
+    stopMotor(centMotor, 1);
     moveMotor(centMotor, 110, -20, 0);
     stopMotor(centMotor, 1);
     taskFlag_dropBottleOnTable = 0;

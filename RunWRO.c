@@ -53,6 +53,7 @@ task main()
 	readIndicators();
 	RightRoom();
 	LeftRoom();
+	fromFirstPairRoomsToFrames();
 	BrakeLeftRightMotor(1);
 	sleep(2000);
 }

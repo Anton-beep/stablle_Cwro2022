@@ -27,7 +27,7 @@ float TakeBottles(){
     BrakeLeftRightMotor(1);
 
     startTask(setNormAfterWaterFullDown);
-    delay(50)
+    delay(50);
 
     AccelerationLinePID(80);
 
@@ -120,6 +120,22 @@ void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
     waitTask(&taskFlag_motorGrabFullDown);
     waitTask(&taskFlag_prepareForCube);
     takeCube();
+    now_cubes++;
+}
+
+void getSecondCube(){
+    preTurnStop();
+    TankTurn(-90);
+    preTurnStop();
+    AccelerationDist(-10, 0);
+    startTask(motorGrabFullDown);
+    preTurnStop();
+    delay(100);
+    waitTask(&taskFlag_motorGrabFullDown);
+    motor[grabMotor] = 60;
+    AccelerationDist(57, 0);
+    preTurnStop();
+    delay(100);
     now_cubes++;
 }
 
@@ -243,7 +259,7 @@ float RightRoom(){
     int cube = get_colorWash_right(ht_results[1]);
 
 
-    right_room_indicator = 6; //key:hardcode
+    right_room_indicator = 2; //key:hardcode
     cube = 1;
     now_cubes = 0;
 
@@ -340,14 +356,14 @@ void BallLeftRoom(byte cube = 0){
         waitTask(&taskFlag_motorGrabFullDown);
 
         motor[centMotor] = 100;
-        delay(200)
+        delay(200);
         motor[centMotor] = 0;
 
         motor[grabMotor] = 80;
-        delay(200)
-        add_angle = 38
+        delay(200);
+        add_angle = 38;
         startTask(normalizeCentMotor);
-        delay(200)
+        delay(200);
         motor[grabMotor] = 0;
     }
     else{
@@ -364,7 +380,9 @@ void BallLeftRoom(byte cube = 0){
 
 void WaterLeftRoom(byte cube = 0){
     if ((now_cubes) && (cube)) {
-
+        getSecondCube();
+        startTask(normalizeCentMotor);
+        waitTask(&taskFlag_normalizeCentMotor);
     }
     else if (cube){
         getCube(-90);
@@ -422,7 +440,7 @@ float LeftRoom(){
     #endif
 
     if (now_cubes == 0){
-        motor[grabMotor] = -30
+        motor[grabMotor] = -30;
     }
 
     ReadLeftWash(30, 20);
@@ -433,7 +451,7 @@ float LeftRoom(){
 
 
     left_room_indicator = 6; //key:hardcode
-    cube = 0;
+    cube = 1;
 
     if ((now_cubes) && (left_room_indicator == 2) && (cube)){
         startTask(motorGrabFullDown);
@@ -447,7 +465,7 @@ float LeftRoom(){
         AccelerationDist(50, 0);
         BrakeLeftRightMotor(1);
         delay(200);
-        preTurnStop()
+        preTurnStop();
         AccelerationDist(-50, 0);
         preTurnStop();
         delay(50);
@@ -477,4 +495,10 @@ float LeftRoom(){
     #else
         return 0;
     #endif
+}
+
+void fromFirstPairRoomsToFrames(){
+    RightWheelTurn(92);
+    AccelerationLinePID(20, 0);
+    AccelerationLinePID(270, 1);
 }
