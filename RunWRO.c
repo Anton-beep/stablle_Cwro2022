@@ -44,7 +44,10 @@ task main()
 	startTask(setNormAfterWaterFullDown);
 	waitTask(&taskFlag_setNormAfterWaterFullDown);
 
+	motor[grabMotor] = -30;
 	delay(2000);
+	motor[grabMotor] = 0;
+
 	AccelerationLinePID(100, 1, 0);
 	readIndicators();
 	RightRoom();
