@@ -502,3 +502,157 @@ void fromFirstPairRoomsToFrames(){
     AccelerationLinePID(20, 0);
     AccelerationLinePID(270, 1);
 }
+
+void drop1in1(){
+    AbsTurn(90);
+    startTask(prepareForDropFirst);
+    LeftWheelTurn(90);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    AccelerationDist(-30, 0);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -40;
+    delay(120);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    AccelerationDist(30, 0);
+    preTurnStop();
+    LeftWheelTurn(-90);
+}
+void drop2in1(){
+    AbsTurn(90);
+    startTask(prepareForDropFirst);
+    LeftWheelTurn(90);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -60;
+    delay(500);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    preTurnStop();
+    LeftWheelTurn(-90);
+}
+
+void drop1in3(){
+    AbsTurn(270);
+    startTask(prepareForDropFirst);
+    RightWheelTurn(90);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    AccelerationDist(-30, 0);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -40;
+    delay(120);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    AccelerationDist(30, 0);
+    preTurnStop();
+    RightWheelTurn(-90);
+}
+void drop2in3(){
+    AbsTurn(270);
+    startTask(prepareForDropFirst);
+    RightWheelTurn(90);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -60;
+    delay(500);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    preTurnStop();
+    RightWheelTurn(-90);
+}
+
+void drop1in2(){
+    AbsTurn(360);
+    startTask(prepareForDropFirst);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    AccelerationDist(30, 0);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -40;
+    delay(120);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    AccelerationDist(-30, 0);
+    preTurnStop();
+}
+void drop2in2(){
+    AbsTurn(360);
+    startTask(prepareForDropFirst);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+	waitTask(&taskFlag_prepareForDropFirst);
+    AccelerationDist(60, 0);
+    BrakeLeftRightMotor(1);
+    preTurnStop();
+    motor[grabMotor] = -60;
+    delay(500);
+    motor[grabMotor] = 0;
+    startTask(normalizeCentMotor);
+    AccelerationDist(-60, 0);
+    preTurnStop();
+}
+
+void readFrames(){
+    preTurnStop();
+    delay(100);
+    TankTurn(-90);
+    BrakeLeftRightMotor();
+    readRightSen_noMove(20, &FamesRawRight);
+    framesColor[0] = get_colorFrame_first(ht_results[1]);
+    AccelerationDist(100, 0);
+    preTurnStop(1);
+
+    readRightSen_noMove(20, &FamesRawRight);
+    framesColor[1] = get_colorFrame_first(ht_results[1]);
+
+    framesColor[2] = (10 - framesColor[0] - framesColor[1]);
+    AccelerationDist(-100, 0);
+    preTurnStop();
+    NOW_ANGLE = 270;
+}
+
+void frames(){
+    readFrames();
+    delay(2000);
+
+    preTurnStop();
+    AccelerationDist(-20, 0);
+    preTurnStop();
+
+    if (firstCube_color == framesColor[0]){
+        drop1in1();
+    }
+    else if (firstCube_color == framesColor[1]){
+        drop1in2();
+    }
+    else if (firstCube_color == framesColor[2]){
+        drop1in3();
+    }
+
+    preTurnStop();
+    
+    if (secondCube_color == framesColor[0]){
+        drop2in1();
+    }
+    else if (secondCube_color == framesColor[1]){
+        drop2in2();
+    }
+    else if (secondCube_color == framesColor[2]){
+        drop2in3();
+    }
+    
+}

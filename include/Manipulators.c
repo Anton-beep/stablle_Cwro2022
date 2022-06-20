@@ -8,6 +8,7 @@ byte taskFlag_prepareForCube = 0;
 byte taskFlag_prepareForBall = 0;
 byte taskFlag_dropBottleOnTable = 0;
 byte taskFlag_OneCubePreBall = 0;
+byte taskFlag_prepareForDropFirst = 0;
 
 task setNormAfterWaterFullDown(){
     taskFlag_setNormAfterWaterFullDown = 1;
@@ -136,6 +137,18 @@ task dropBottleOnTable(){
     stopMotor(centMotor, 1);
     taskFlag_dropBottleOnTable = 0;
     stopTask(dropBottleOnTable);
+}
+
+task prepareForDropFirst(){
+    taskFlag_prepareForDropFirst = 1;
+
+    stopMotor(centMotor, 1);
+    moveMotor(centMotor, 200, 60, 0);
+    stopMotor(centMotor, 1);
+
+    taskFlag_prepareForDropFirst = 0;
+
+    stopTask(prepareForDropFirst);
 }
 
 void takeCube()
