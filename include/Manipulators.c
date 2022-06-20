@@ -82,7 +82,7 @@ task OneCubePreBall(){
     }
     stopMotor(grabMotor, 1);
 
-    moveMotor(grabMotor, -200, -100, 1);
+    moveMotor(grabMotor, -250, -100, 1);
 
     taskFlag_OneCubePreBall = 0;
 }
@@ -92,7 +92,15 @@ task normalizeCentMotor()
     taskFlag_normalizeCentMotor = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, getMotorEncoder(centMotor) * -1, getSign(getMotorEncoder(centMotor)) * -25, 1);
+    float start_deg = fabs(nMotorEncoder[centMotor]);
+    short sign =   getSign(nMotorEncoder[centMotor]);
+    short deg = nMotorEncoder[centMotor] * -1;
+	motor[centMotor] = -25 * sign;
+	while (MotorAbsMovedDegrees(centMotor, start_deg) < (fabs(deg))){
+        if (getSign(nMotorEncoder[centMotor]) != sign){
+            break;
+        }
+    }
     stopMotor(centMotor, 1);
 
     motor[centMotor] = 0;

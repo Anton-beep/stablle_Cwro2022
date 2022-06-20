@@ -38,6 +38,7 @@ task main()
 	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
 
 	//TakeBottles();
+
 	startTask(motorWaterFullDown);
 	waitTask(&taskFlag_motorWaterFullDown);
 
