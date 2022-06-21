@@ -77,8 +77,3 @@ int get_colorFrame_second(int rawHTRes)
         return 5;
     }
 }
-
-int get_thirdFrame_noReading(int frame1, int frame2)
-{
-    return 10 - frame1 - frame2;
-}

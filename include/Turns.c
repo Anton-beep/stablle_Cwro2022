@@ -201,18 +201,3 @@ void AbsTurn(float need_angle){
 	}
 	NOW_ANGLE = need_angle;
 }
-
-void EditAngle(float need_angle)
-{
-	NOW_ANGLE = need_angle;
-}
-
-void MoveBeforeTurn(short bib = 1)
-{
-	AccelerationDist(BetweenSensorsAndMiddle);
-	if (bib == 1)
-	{
-		BrakeLeftRightMotor(1);
-		sleep(150);
-	}
-}

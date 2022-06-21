@@ -13,9 +13,9 @@
 #include <include/Init.c>
 #include "header/logging.h"
 #include <include/SensorsTools.c>
+#include <include/MovementTools.c>
 #include <include/Tools.c>
 #include <include/colorsDetection.c>
-#include <include/MovementTools.c>
 #include <include/TachoPID.c>
 #include <include/LinePID.c>
 #include <include/Turns.c>
@@ -37,11 +37,10 @@ task main()
 	initSensor(&colorRightSensor, HTright, HTCS2_MODE_RAW);
 	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
 
-	//LCDWriteInfoNXTSen();
-	//calibrateLeftRightHT(&colorLeftSensor, &colorRightSensor, &FamesRawRight);
-
-	stopMotor(grabMotor, 0);
-
+	#if CALIBRATE == 1
+		LCDWriteInfoNXTSen();
+		calibrateLeftRightHT(&colorLeftSensor, &colorRightSensor, &FamesRawRight);
+	#endif
 
 	motor[grabMotor] = -30;
 
@@ -58,4 +57,7 @@ task main()
 	AccelerationLinePID(20, 1);
 	frames();
 
+	#if LOGGING == 1
+		fileClose(fileHandle);
+	#endif
 }

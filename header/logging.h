@@ -1,48 +1,96 @@
-// The name of the file that we're saving data to
-/*void my_itoa(long i, char *result)
-{
-	int power = 0, j = 0;
+#if LOGGING == 1
+  char * filename = "Logs.txt";
+  char * end = "\n";
+  long fileHandle = 0;
 
-	j = i;
-	for (power = 1; j>10; j /= 10)
-		power *= 10;
-
-	for (; power>0; power /= 10)
-	{
-		*result++ = '0' + i / power;
-		i %= power;
-	}
-	*result = '\0';
-}
-
-short counter(long number){
-	short count;
-	while (number){
-		number /= 10;
-		count++;
-	}
-	return count;
-}
-
-void writeIndicators(long leftValue, long rightValue){
-  char * filename = "Indicators";
-
-  char * left  = "Left Indicator:";
-  int strlen1 = strlen(left);
-  char * right = "Right Indicator:";
-  int strlen2 = strlen(right);
 
   long fileHandle = fileOpenWrite(filename);
 
-  counter
-	char leftResult[];
 
-  fileWriteData(fileHandle, left,  strlen1 + 1);
-  fileWriteData(fileHandle, my_itoa(leftValue), strlen(convert(leftValue)) + 1);
+  void writeIndicators(long leftValue, long rightValue){
 
-  fileWriteData(fileHandle, right, strlen2 + 1);
-  fileWriteData(fileHandle, convert(rightValue), strlen(convert(rightValue)) + 1);
+    char * left  = " Left Indicator:";
+    int strlen1 = strlen(left);
+    char * right = "          ------          Right Indicator:";
+    int strlen2 = strlen(right);
 
-  fileClose(fileHandle);
-}
-*/
+    char  leftResult[10];
+    char rightResult[10];
+
+    sprintf(leftResult, "%d", leftValue);
+    sprintf(rightResult, "%d", rightValue);
+
+    fileWriteData(fileHandle, left,  strlen1 + 1);
+    fileWriteData(fileHandle, leftResult, strlen(leftResult) + 1);
+
+    fileWriteData(fileHandle, right, strlen2 + 1);
+    fileWriteData(fileHandle, rightResult, strlen(rightResult) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+  }
+
+  void writeRightRoomInfo(long rawValue, long colorValue){
+
+    char * raw  = "Raw info:";
+    char * color ="          ------          Right Cube:";
+
+    char    rawResult[10];
+    char  colorResult[10];
+
+    sprintf(rawResult,   "%d", rawValue);
+    sprintf(colorResult, "%d", colorValue);
+
+    fileWriteData(fileHandle, raw,  strlen(raw) + 1);
+    fileWriteData(fileHandle, rawResult, strlen(rawResult) + 1);
+
+    fileWriteData(fileHandle, color, strlen(color) + 1);
+    fileWriteData(fileHandle, colorResult, strlen(colorResult) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+  }
+
+  void writeLeftRoomInfo(long rawValue, long colorValue){
+
+    char * raw  = "Raw info:";
+    char * color ="          ------          Left Cube:";
+
+    char    rawResult[10];
+    char  colorResult[10];
+
+    sprintf(rawResult,   "%d", rawValue);
+    sprintf(colorResult, "%d", colorValue);
+
+    fileWriteData(fileHandle, raw,  strlen(raw) + 1);
+    fileWriteData(fileHandle, rawResult, strlen(rawResult) + 1);
+
+    fileWriteData(fileHandle, color, strlen(color) + 1);
+    fileWriteData(fileHandle, colorResult, strlen(colorResult) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+  }
+
+  void writeFramesInfo(long *rawValues, long *colorValues){
+    for (short g = 0; g < 3; g++){
+      char * frame = "Frame number:"
+      char * raw   = "Raw info:";
+      char * color = "          ------          Frame Color:";
+
+      char    rawResult[10];
+      char  colorResult[10];
+      char        number[1];
+
+      sprintf(rawResult,   "%d", rawValues[g]);
+      sprintf(colorResult, "%d", colorValues[g]);
+      sprintf(number, "%d", g + 1);
+
+      fileWriteData(fileHandle, frame,  strlen(frame) + 1);
+      fileWriteData(fileHandle, number, strlen(number) + 1);
+
+      fileWriteData(fileHandle, raw, strlen(raw) + 1);
+      fileWriteData(fileHandle, rawResult, strlen(rawResult) + 1);
+
+
+      fileWriteData(fileHandle, color, strlen(color) + 1);
+      fileWriteData(fileHandle, colorResult, strlen(colorResult) + 1);
+
+      fileWriteData(fileHandle, end, strlen(end) + 1);
+    }
+  }
+#endif

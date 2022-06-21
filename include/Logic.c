@@ -70,12 +70,6 @@ float readIndicators(){
     RightWheelTurn(90);
     AccelerationLinePID(50, 0, 0, 10, acceleration, 0, 90, 0, 10);
 
-    #if DEBUG == 1
-        eraseDisplay();
-        displayString(7, "left indicator: %d", ht_results[0]);
-        displayString(10, "right indicator: %d", ht_results[1]);
-    #endif
-
     #if LOGGING == 1
         writeIndicators(ht_results[0], ht_results[1]);
     #endif
@@ -281,14 +275,8 @@ float RightRoom(){
         WaterRightRoom(cube);
     }
 
-    #if DEBUG == 1
-        BrakeLeftRightMotor(1);
-        delay(100);
-        eraseDisplay();
-        displayTextLine(6, "raw %d", ht_results[1]);
-        displayTextLine(8, "color %d", cube);
-        BrakeLeftRightMotor(1);
-        delay(6000);
+    #if LOGGING == 1
+        writeRightRoomInfo(ht_results[1], cube)
     #endif
 
     #if TIMER == 1
@@ -497,12 +485,8 @@ float LeftRoom(){
         WaterLeftRoom(cube);
     }
 
-    #if DEBUG == 1
-        eraseDisplay();
-        displayTextLine(6, "raw %d", ht_results[0]);
-        displayTextLine(8, "color %d", cube);
-        BrakeLeftRightMotor(1);
-        delay(2000);
+    #if LOGGING == 1
+        writeLeftRoomInfo(ht_results[0], cube)
     #endif
 
     #if TIMER == 1
@@ -625,6 +609,8 @@ void drop2in2(){
 }
 
 void readFrames(){
+    long rawFrames[3] = {0, 0, 0};
+
     preTurnStop();
     AccelerationDist(-20, 0);
     preTurnStop();
@@ -634,16 +620,23 @@ void readFrames(){
     preTurnStop();
     readRightSen_noMove(40, &FamesRawRight);
     framesColor[0] = get_colorFrame_first(ht_results[1]);
+    rawFrames[0] = ht_results[1];
+
     AccelerationDist(100, 0);
     preTurnStop();
 
     readRightSen_noMove(40, &FamesRawRight);
-    framesColor[1] = get_colorFrame_first(ht_results[1]);
+    framesColor[1] = get_colorFrame_second(ht_results[1]);
+    rawFrames[1] = ht_results[1];
 
     framesColor[2] = (10 - framesColor[0] - framesColor[1]);
     AccelerationDist(-50, 0);
     preTurnStop();
     NOW_ANGLE = 270;
+
+    #if LOGGING == 1
+        writeFramesInfo(rawFrames, framesColor);
+    #endif
 }
 
 void frames(){

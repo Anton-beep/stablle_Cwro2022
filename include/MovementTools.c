@@ -5,6 +5,12 @@ float SpeedCounter(float speed, int acceleration_value, int time_delta, float ac
 	return now_speed;
 }
 
+void resetError(){
+  pr_error = 0;
+  pr_error_tacho = 0;
+  integral_sum = 0;
+}
+
 float DegreesToMillimeters(float degrees_input)
 {
 	float millimiters = degrees_input * PI * wheelDiameter / 360;
@@ -68,6 +74,6 @@ void moveMotor(tMotor motorName, int deg, int speed, char stop)
 
 void preTurnStop(int time = 80){
 	BrakeLeftRightMotor(1);
-    resetError();
-    delay(time);
+  resetError();
+  delay(time);
 }

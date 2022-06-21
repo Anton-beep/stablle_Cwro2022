@@ -1,6 +1,7 @@
 #define TIMER 0
 #define LOGGING 0
-#define DEBUG 1
+#define DEBUG 0
+#define CALIBRATE 0
 
 const float Kp_norm = 0.25;
 const float Ki_norm = 0;
@@ -44,7 +45,7 @@ float NOW_ANGLE = 45;
 float pr_error = 0;
 float pr_error_tacho = 0;
 
-short framesColor[3] = {1000, 1000, 1000};
+long framesColor[3] = {1000, 1000, 1000};
 short cubes[2] = {-1, -1};
 
 typedef struct {
@@ -57,27 +58,10 @@ typedef struct {
 	float min_motor_enc;
 } SyncedMotorsPair;
 
-
 typedef struct {
 	float firstSensor;
 	float secondSensor;
 } Arraysensors;
-
-typedef struct {
-	char *commands;
-	byte weight;
-} weights_struct;
-
-weights_struct* InitStructWeight (char *command, byte weight) {
-	weights_struct *w_pointer;
-	weights_struct w;
-
-	w.commands = command;
-	w.weight = weight;
-	w_pointer = &w;
-
-	return w_pointer;
-}
 
 Arraysensors results_sensors;
 

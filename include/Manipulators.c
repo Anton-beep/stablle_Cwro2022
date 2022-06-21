@@ -157,11 +157,6 @@ void takeCube()
     moveMotor(grabMotor, 180, 40, 1);
 }
 
-void takeSecondCube(){
-    setMotorSpeed(grabMotor, 70);
-    sleep(300);
-}
-
 void closeBall(){
     setMotorSpeed(grabMotor, 70);
     sleep(500);

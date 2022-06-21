@@ -41,7 +41,3 @@ void DrivePIDTacho(int speed, SyncedMotorsPair MotorPair, short tankTurn = 0) {
 
 	delay(2);
 }
-
-void resetErrors_PIDTacho(){
-	pr_error_tacho = 0;
-}

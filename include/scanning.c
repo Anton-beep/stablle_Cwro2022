@@ -104,19 +104,3 @@ void readRightSen_noMove(int count_times, CalibrationHiTechData* calibration){
 
 	ht_results[1] = sum_rr + sum_gr + sum_br;
 }
-
-void readLeftSen_noMove(int count_times, CalibrationHiTechData* calibration){
-	int sum_rr = 0;
-	int sum_gr = 0;
-	int sum_br = 0;
-	
-	for (int i = 0; i < count_times; i++){
-		readSensorRaw(&colorLeftSensor, calibration);
-
-		sum_rr += colorLeftSensor.red_calibrated;
-		sum_gr += colorLeftSensor.green_calibrated;
-		sum_br += colorLeftSensor.blue_calibrated;
-	}
-
-	ht_results[0] = sum_rr + sum_gr + sum_br;
-}
