@@ -29,6 +29,7 @@ task motorWaterFullDown(){
         past_enc_centMotor = nMotorEncoder[centMotor];
         sleep(10);
     }
+    sleep(100);
     taskFlag_motorWaterFullDown = 0;
     stopTask(motorWaterFullDown);
 }
@@ -112,7 +113,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 155, 100, 1);
+    moveMotor(grabMotor, 170, 100, 1);
     motor[grabMotor] = 0;
     stopMotor(grabMotor, 1);
 
@@ -153,7 +154,7 @@ task prepareForDropFirst(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 135, 40, 1);
+    moveMotor(grabMotor, 180, 40, 1);
 }
 
 void takeSecondCube(){

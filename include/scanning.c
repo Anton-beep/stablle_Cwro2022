@@ -99,6 +99,7 @@ void readRightSen_noMove(int count_times, CalibrationHiTechData* calibration){
 		sum_rr += colorRightSensor.red_calibrated;
 		sum_gr += colorRightSensor.green_calibrated;
 		sum_br += colorRightSensor.blue_calibrated;
+		delay(7);
 	}
 
 	ht_results[1] = sum_rr + sum_gr + sum_br;
