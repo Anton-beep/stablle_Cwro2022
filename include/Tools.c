@@ -29,8 +29,8 @@ void check_battery()
     eraseDisplay();
     while (true)
     {
-      readSensorRaw(htcs2Ptrleft,  data);
-      readSensorRaw(htcs2Ptrright, data);
+      readSensor(htcs2Ptrleft,  data);
+      readSensor(htcs2Ptrright, data);
       displayCenteredTextLine(6, "left R: %d G: %d B: %d W: %d", htcs2Ptrleft->red, htcs2Ptrleft->green, htcs2Ptrleft->blue, htcs2Ptrleft->white);
       displayCenteredTextLine(8, "right R: %d G: %d B: %d W: %d", htcs2Ptrright->red, htcs2Ptrright->green, htcs2Ptrright->blue, htcs2Ptrright->white);
       sleep(2);

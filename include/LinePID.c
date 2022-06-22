@@ -6,9 +6,9 @@ void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short 
 
 	float error = reverse ? secondElement - firstElement : firstElement - secondElement;
 
-	float actionP = error * Kp_norm * sqrt(speed / max_speed_const);
+	float actionP = error * Kp_norm * sqrt(speed / (max_speed_const - min_speed_const));
 	float actionI = (error + pr_error) * Ki_norm;
-	float actionD = (error - pr_error) * Kd_norm * (speed / max_speed_const);
+	float actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const));
 	float steer = actionP + actionI + actionD;
 	pr_error = error;
 

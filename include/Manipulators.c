@@ -12,9 +12,21 @@ byte taskFlag_prepareForDropFirst = 0;
 
 task setNormAfterWaterFullDown(){
     taskFlag_setNormAfterWaterFullDown = 1;
-    moveMotor(centMotor, 220, 30, 1);
+
+    stopMotor(centMotor, 1);
+    float start_deg = fabs(nMotorEncoder[centMotor]);
+    short sign =   getSign(nMotorEncoder[centMotor]);
+    short deg = 220 * -1;
+	motor[centMotor] = -25 * sign;
+	while (MotorAbsMovedDegrees(centMotor, start_deg) < (fabs(deg))){
+        if (getSign(nMotorEncoder[centMotor]) != sign){
+            break;
+        }
+    }
+    stopMotor(centMotor, 1);
+
     resetMotorEncoder(centMotor);
-    motor[centMotor] = 0;
+
     taskFlag_setNormAfterWaterFullDown = 0;
     stopTask(setNormAfterWaterFullDown);
 }
@@ -22,9 +34,8 @@ task setNormAfterWaterFullDown(){
 task motorWaterFullDown(){
     taskFlag_motorWaterFullDown = 1;
     int past_enc_centMotor = fabs(nMotorEncoder[centMotor]);
-    sleep(200);
     setMotorSpeed(centMotor, -100);
-    sleep(100);
+    sleep(200);
     while (fabs(nMotorEncoder[centMotor]) - fabs(past_enc_centMotor) > 1){
         past_enc_centMotor = nMotorEncoder[centMotor];
         sleep(10);
@@ -113,7 +124,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 170, 100, 1);
+    moveMotor(grabMotor, 170, 60, 1);
     motor[grabMotor] = 0;
     stopMotor(grabMotor, 1);
 
@@ -124,7 +135,7 @@ task prepareForCube(){
 task prepareForBall(){
     taskFlag_prepareForBall = 1;
 
-    moveMotor(grabMotor, 300, 100, 1);
+    moveMotor(grabMotor, 300, 70, 1);
     motor[grabMotor] = 0;
 
     taskFlag_prepareForBall = 0;
@@ -154,7 +165,7 @@ task prepareForDropFirst(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 180, 40, 1);
+    moveMotor(grabMotor, 170, 40, 1);
 }
 
 void closeBall(){

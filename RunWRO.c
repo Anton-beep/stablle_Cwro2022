@@ -34,29 +34,39 @@ task main()
 	InitWashCallibrationRaw();
 	InitCallibrationFamesInfoRaw();
 
-	initSensor(&colorRightSensor, HTright, HTCS2_MODE_RAW);
-	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_RAW);
+	initSensor(&colorRightSensor, HTright, HTCS2_MODE_ACTIVE);
+	initSensor(&colorLeftSensor,  HTleft,  HTCS2_MODE_ACTIVE);
 
 	#if CALIBRATE == 1
 		LCDWriteInfoNXTSen();
 		calibrateLeftRightHT(&colorLeftSensor, &colorRightSensor, &FamesRawRight);
 	#endif
 
-	motor[grabMotor] = -30;
+	motor[grabMotor] = -20;
 
 	TakeBottles();
 
 	motor[grabMotor] = 0;
 
-	readIndicators();
+	readIndicators(17);
 	RightRoom();
 	LeftRoom();
 	fromFirstPairRoomsToFrames();
-	BrakeLeftRightMotor(1);
-	sleep(2000);
 	AccelerationLinePID(20, 1);
 	frames();
-
+	now_cubes = 0;
+	cubes[0] = 0;
+	cubes[1] = 0;
+	fromFramesToSecondPairRooms();
+	readIndicators(12);
+	RightRoom();
+	LeftRoom();
+	fromSecondPairRoomsToFrames();
+	BrakeLeftRightMotor(1);
+	sleep(2000);
+	frames(0);
+	BrakeLeftRightMotor(1);
+	sleep(2000);
 	#if LOGGING == 1
 		fileClose(fileHandle);
 	#endif

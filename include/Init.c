@@ -1,17 +1,17 @@
 #define TIMER 0
-#define LOGGING 0
-#define DEBUG 0
+#define LOGGING 1
+#define DEBUG 1
 #define CALIBRATE 0
 
-const float Kp_norm = 0.25;
+const float Kp_norm = 0.35;
 const float Ki_norm = 0;
-const float Kd_norm = 9;
+const float Kd_norm = 12;
 
-const float Kp_tacho = 1;
-const float Ki_tacho = 0.002;
+const float Kp_tacho = 4;
+const float Ki_tacho = 0.0015	;
 const float Kd_tacho = 20;
 
-const float Kp_tank = 0.6;
+const float Kp_tank = 0.8;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -19,26 +19,27 @@ const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2532;
-const float right_min_sensor = 2476;
+const float left_min_sensor = 2492;
+const float right_min_sensor = 2464;
 
-const float left_max_sensor = 1788;
-const float right_max_sensor = 1732;
+const float left_max_sensor = 1780;
+const float right_max_sensor = 1716;
 
 const float max_speed_const = 80;
-const float min_speed_const = 16;
+const float min_speed_const = 17;
 
 const float acceleration = 0.04;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;
+long rawFrames[3] = {0, 0, 0};
 
 const float acceleration_turn = 0.04;
 
 byte left_bottle  = 1;
 byte right_bottle = 1;
 byte now_cubes = 0;
-long ht_results[2];
+float ht_results[2];
 
 float integral_sum = 0;
 float NOW_ANGLE = 45;
@@ -77,47 +78,47 @@ CalibrationHiTechData WashInfoRawLeft;
 CalibrationHiTechData WashInfoRawRight;
 
 void InitCallibrationFamesInfoRaw() {
-	FamesRawRight.red_max = 70;
-	FamesRawRight.green_max = 100;
-	FamesRawRight.blue_max = 50;
+	FamesRawRight.red_max = 36;
+	FamesRawRight.green_max = 36;
+	FamesRawRight.blue_max = 36;
 
-	FamesRawRight.red_min = 22;
-	FamesRawRight.green_min = 42;
-	FamesRawRight.blue_min = 31;
+	FamesRawRight.red_min = 2;
+	FamesRawRight.green_min = 4;
+	FamesRawRight.blue_min = 5;
 }
 
 void InitMarkerCallibrationRaw() {
-	MarkerInfoRawLeft.red_max =   108;
-	MarkerInfoRawLeft.green_max = 161;
-	MarkerInfoRawLeft.blue_max =  104;
+	MarkerInfoRawLeft.red_max =   38;
+	MarkerInfoRawLeft.green_max = 36;
+	MarkerInfoRawLeft.blue_max =  35;
 
-	MarkerInfoRawLeft.red_min =   19;
-	MarkerInfoRawLeft.green_min = 39;
-	MarkerInfoRawLeft.blue_min =  28;
+	MarkerInfoRawLeft.red_min =   1;
+	MarkerInfoRawLeft.green_min = 1;
+	MarkerInfoRawLeft.blue_min =  1;
 
-	MarkerInfoRawRight.red_max =   146;
-	MarkerInfoRawRight.green_max = 215;
-	MarkerInfoRawRight.blue_max =  132;
+	MarkerInfoRawRight.red_max =   40;
+	MarkerInfoRawRight.green_max = 38;
+	MarkerInfoRawRight.blue_max =  38;
 
-	MarkerInfoRawRight.red_min =   15;
-	MarkerInfoRawRight.green_min = 33;
-	MarkerInfoRawRight.blue_min =  24;
+	MarkerInfoRawRight.red_min =   0;
+	MarkerInfoRawRight.green_min = 1;
+	MarkerInfoRawRight.blue_min =  1;
 }
 
 void InitWashCallibrationRaw (){
-	WashInfoRawLeft.red_max =   168;
-	WashInfoRawLeft.green_max = 249;
-	WashInfoRawLeft.blue_max =  155;
+	WashInfoRawLeft.red_max =   95;
+	WashInfoRawLeft.green_max = 90;
+	WashInfoRawLeft.blue_max =  79;
 
-	WashInfoRawLeft.red_min =   16;
-	WashInfoRawLeft.green_min = 38;
-	WashInfoRawLeft.blue_min =  30;
+	WashInfoRawLeft.red_min =   0;
+	WashInfoRawLeft.green_min = 1;
+	WashInfoRawLeft.blue_min =  2;
 
-	WashInfoRawRight.red_max =   144;
-	WashInfoRawRight.green_max = 213;
-	WashInfoRawRight.blue_max =  129;
+	WashInfoRawRight.red_max =   115;
+	WashInfoRawRight.green_max = 109;
+	WashInfoRawRight.blue_max =  92;
 
-	WashInfoRawRight.red_min =   17;
-	WashInfoRawRight.green_min = 36;
-	WashInfoRawRight.blue_min =  23;
+	WashInfoRawRight.red_min =   2;
+	WashInfoRawRight.green_min = 2;
+	WashInfoRawRight.blue_min =  1;
 }

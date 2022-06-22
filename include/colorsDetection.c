@@ -1,12 +1,12 @@
 int get_colorWash_left(int rawHT)
 {
-    if (rawHT > 10000){
+    if (rawHT > 180){
         return 4;
     }
-    else if (rawHT > 4900){
+    else if (rawHT > 70){ //
         return 1;
     }
-    else if (rawHT > 2000){
+    else if (rawHT > 10){
         return 5;
     }
     else{
@@ -16,13 +16,13 @@ int get_colorWash_left(int rawHT)
 
 int get_colorWash_right(int rawHT)
 {
-    if (rawHT > 8500){
+    if (rawHT > 180){ //
         return 4;
     }
-    else if (rawHT > 4900){
+    else if (rawHT > 100){
         return 1;
     }
-    else if (rawHT > 900){
+    else if (rawHT > 10){
         return 5;
     }
     else{
@@ -32,7 +32,7 @@ int get_colorWash_right(int rawHT)
 
 int get_colorMarker_left(int rawHTRes)
 {
-    if (rawHTRes > 1600){
+    if (rawHTRes > 2500){
         return 6;
     }
     return 2;
@@ -40,7 +40,7 @@ int get_colorMarker_left(int rawHTRes)
 
 int get_colorMarker_right(int rawHTRes)
 {
-    if (rawHTRes > 1700){
+    if (rawHTRes > 2500){
         return 6;
     }
     return 2;
@@ -48,13 +48,10 @@ int get_colorMarker_right(int rawHTRes)
 
 int get_colorFrame_first(int rawHTRes)
 {
-    //yellow 56917
-    //red  30211
-    //black 20935
-    if (rawHTRes > 40000){
+    if (rawHTRes > 75){
         return 4;
     }
-    else if (rawHTRes > 28000){
+    else if (rawHTRes > 40){
         return 1;
     }
     else{
@@ -64,13 +61,10 @@ int get_colorFrame_first(int rawHTRes)
 
 int get_colorFrame_second(int rawHTRes)
 {
-    //yellow 50236
-    //red 36518
-    //black 13866 || 21802
-    if (rawHTRes > 40000){
+    if (rawHTRes > 200){
         return 4;
     }
-    else if (rawHTRes > 28000){
+    else if (rawHTRes > 55){
         return 1;
     }
     else{

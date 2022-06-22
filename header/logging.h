@@ -1,8 +1,6 @@
 #if LOGGING == 1
   char * filename = "Logs.txt";
   char * end = "\n";
-  long fileHandle = 0;
-
 
   long fileHandle = fileOpenWrite(filename);
 
@@ -17,8 +15,8 @@
     char  leftResult[10];
     char rightResult[10];
 
-    sprintf(leftResult, "%d", leftValue);
-    sprintf(rightResult, "%d", rightValue);
+    sprintf(leftResult, "%f", leftValue);
+    sprintf(rightResult, "%f", rightValue);
 
     fileWriteData(fileHandle, left,  strlen1 + 1);
     fileWriteData(fileHandle, leftResult, strlen(leftResult) + 1);
@@ -36,7 +34,7 @@
     char    rawResult[10];
     char  colorResult[10];
 
-    sprintf(rawResult,   "%d", rawValue);
+    sprintf(rawResult,   "%f", rawValue);
     sprintf(colorResult, "%d", colorValue);
 
     fileWriteData(fileHandle, raw,  strlen(raw) + 1);
@@ -55,7 +53,7 @@
     char    rawResult[10];
     char  colorResult[10];
 
-    sprintf(rawResult,   "%d", rawValue);
+    sprintf(rawResult,   "%f", rawValue);
     sprintf(colorResult, "%d", colorValue);
 
     fileWriteData(fileHandle, raw,  strlen(raw) + 1);
@@ -68,7 +66,7 @@
 
   void writeFramesInfo(long *rawValues, long *colorValues){
     for (short g = 0; g < 3; g++){
-      char * frame = "Frame number:"
+      char * frame = "Frame number:";
       char * raw   = "Raw info:";
       char * color = "          ------          Frame Color:";
 
@@ -76,7 +74,7 @@
       char  colorResult[10];
       char        number[1];
 
-      sprintf(rawResult,   "%d", rawValues[g]);
+      sprintf(rawResult,   "%f", rawValues[g]);
       sprintf(colorResult, "%d", colorValues[g]);
       sprintf(number, "%d", g + 1);
 

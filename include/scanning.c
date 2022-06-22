@@ -17,8 +17,8 @@ void ReadIndicator(short len_millimeters, short speed){
 	int sum_br = 0;
 	
 	while(now_millimeters < len_millimeters) {
-		readSensorRaw(&colorLeftSensor,  &MarkerInfoRawLeft);
-		readSensorRaw(&colorRightSensor, &MarkerInfoRawRight);
+		readSensor(&colorLeftSensor,  &MarkerInfoRawLeft);
+		readSensor(&colorRightSensor, &MarkerInfoRawRight);
 
 		sum_rl += colorLeftSensor.red_calibrated;
 		sum_gl += colorLeftSensor.green_calibrated;
@@ -32,11 +32,12 @@ void ReadIndicator(short len_millimeters, short speed){
 		now_millimeters = DegreesToMillimeters(moved_motors);
 	}
 
-	ht_results[0] = sum_rl + sum_gl + sum_bl;
-	ht_results[1] = sum_rr + sum_gr + sum_br;
+	ht_results[0] = (sum_rl + sum_gl + sum_bl);
+	ht_results[1] = (sum_rr + sum_gr + sum_br);
 }
 
 void ReadLeftWash(short len_millimeters, short speed){
+	BrakeLeftRightMotor(0);
 	motor[motorA] = -speed;
 	motor[motorB] = speed;
 
@@ -49,7 +50,7 @@ void ReadLeftWash(short len_millimeters, short speed){
 	int sum_ht = 0;
 
 	while(now_millimeters < len_millimeters) {
-		readSensorRaw(&colorLeftSensor,  &WashInfoRawLeft);
+		readSensor(&colorLeftSensor,  &WashInfoRawLeft);
 
 		sum_ht += colorLeftSensor.red_calibrated + colorLeftSensor.green_calibrated + colorLeftSensor.blue_calibrated;
 
@@ -58,9 +59,11 @@ void ReadLeftWash(short len_millimeters, short speed){
 	}
 
 	ht_results[0] = sum_ht;
+	BrakeLeftRightMotor(0);
 }
 
 void ReadRightWash(short len_millimeters, short speed){
+	BrakeLeftRightMotor(0);
 	motor[motorA] = -speed;
 	motor[motorB] = speed;
 
@@ -75,7 +78,7 @@ void ReadRightWash(short len_millimeters, short speed){
 	int sum_br = 0;
 
 	while(now_millimeters < len_millimeters) {
-		readSensorRaw(&colorRightSensor,  &WashInfoRawRight);
+		readSensor(&colorRightSensor,  &WashInfoRawRight);
 
 		sum_rr += colorRightSensor.red_calibrated;
 		sum_gr += colorRightSensor.green_calibrated;
@@ -86,21 +89,39 @@ void ReadRightWash(short len_millimeters, short speed){
 	}
 
 	ht_results[1] = sum_rr + sum_gr + sum_br;
+	BrakeLeftRightMotor(0);
 }
 
-void readRightSen_noMove(int count_times, CalibrationHiTechData* calibration){
+void readRightSen_noMove(int count_times, CalibrationHiTechData* calibration, int timer = 100){
 	int sum_rr = 0;
 	int sum_gr = 0;
 	int sum_br = 0;
 	
 	for (int i = 0; i < count_times; i++){
-		readSensorRaw(&colorRightSensor, calibration);
+		readSensor(&colorRightSensor, calibration);
 
 		sum_rr += colorRightSensor.red_calibrated;
 		sum_gr += colorRightSensor.green_calibrated;
 		sum_br += colorRightSensor.blue_calibrated;
-		delay(7);
+		delay(timer);
 	}
 
-	ht_results[1] = sum_rr + sum_gr + sum_br;
+	ht_results[1] = (sum_rr + sum_gr + sum_br) / (3 * count_times);
+}
+
+void readLeftSen_noMove(int count_times, CalibrationHiTechData* calibration, int timer = 100){
+	int sum_rr = 0;
+	int sum_gr = 0;
+	int sum_br = 0;
+	
+	for (int i = 0; i < count_times; i++){
+		readSensor(&colorLeftSensor, calibration);
+
+		sum_rr += colorLeftSensor.red_calibrated;
+		sum_gr += colorLeftSensor.green_calibrated;
+		sum_br += colorLeftSensor.blue_calibrated;
+		delay(timer);
+	}
+
+	ht_results[0] = (sum_rr + sum_gr + sum_br) / (3 * count_times);
 }
