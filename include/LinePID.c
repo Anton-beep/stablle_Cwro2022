@@ -5,10 +5,21 @@ void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short 
 	secondElement = secondElement ? secondElement : results_sensors.secondSensor;
 
 	float error = reverse ? secondElement - firstElement : firstElement - secondElement;
+	float cof = 1;
 
-	float actionP = error * Kp_norm * sqrt(speed / (max_speed_const - min_speed_const));
-	float actionI = (error + pr_error) * Ki_norm;
-	float actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const));
+	if (speed < 50){
+		cof = 0.7;
+	}
+	if (speed < 30){
+		cof = 0.65;
+	}
+	if (speed < 20){
+		cof = 0.7;
+	}
+
+	float actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof;
+	float actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof;
+	float actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof;
 	float steer = actionP + actionI + actionD;
 	pr_error = error;
 

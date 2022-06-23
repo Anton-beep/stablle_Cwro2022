@@ -93,35 +93,41 @@ void ReadRightWash(short len_millimeters, short speed){
 }
 
 void readRightSen_noMove(int count_times, CalibrationHiTechData* calibration, int timer = 100){
-	int sum_rr = 0;
-	int sum_gr = 0;
-	int sum_br = 0;
+	int sum_w = 0;
 	
 	for (int i = 0; i < count_times; i++){
 		readSensor(&colorRightSensor, calibration);
 
-		sum_rr += colorRightSensor.red_calibrated;
-		sum_gr += colorRightSensor.green_calibrated;
-		sum_br += colorRightSensor.blue_calibrated;
+		#if LOGGING == 1
+			char w[10];
+			sprintf(w, "%d", colorRightSensor.white);
+			fileWriteData(fileHandle, w,  strlen(w) + 1);
+			fileWriteData(fileHandle, end, strlen(end) + 1);
+		#endif
+
+		sum_w += colorRightSensor.white;
 		delay(timer);
 	}
 
-	ht_results[1] = (sum_rr + sum_gr + sum_br) / (3 * count_times);
+	ht_results[1] = (sum_w) / (count_times);
 }
 
 void readLeftSen_noMove(int count_times, CalibrationHiTechData* calibration, int timer = 100){
-	int sum_rr = 0;
-	int sum_gr = 0;
-	int sum_br = 0;
+	int sum_w = 0;
 	
 	for (int i = 0; i < count_times; i++){
 		readSensor(&colorLeftSensor, calibration);
 
-		sum_rr += colorLeftSensor.red_calibrated;
-		sum_gr += colorLeftSensor.green_calibrated;
-		sum_br += colorLeftSensor.blue_calibrated;
+		#if LOGGING == 1
+			char w[10];
+			sprintf(w, "%d", colorLeftSensor.white);
+			fileWriteData(fileHandle, w,  strlen(w) + 1);
+			fileWriteData(fileHandle, end, strlen(end) + 1);
+		#endif
+
+		sum_w += colorLeftSensor.white;
 		delay(timer);
 	}
 
-	ht_results[0] = (sum_rr + sum_gr + sum_br) / (3 * count_times);
+	ht_results[0] = (sum_w) / (count_times);
 }

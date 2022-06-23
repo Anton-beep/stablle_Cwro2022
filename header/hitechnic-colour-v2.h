@@ -15,12 +15,12 @@
 #define HTCS2_COLNUM_REG      0x00      /*!< Color number */
 #define HTCS2_RED_REG         0x01      /*!< Red reading */
 #define HTCS2_GREEN_REG       0x02      /*!< Green reading */
-#define HTCS2_BLUE_REG        0x03      /*!< Blue reading */
-#define HTCS2_WHITE_REG       0x04      /*!< White channel reading */
-#define HTCS2_COL_INDEX_REG   0x05      /*!< Color index number */
-#define HTCS2_RED_NORM_REG    0x06      /*!< Normalised red reading */
+#define HTCS2_BLUE_REG        0x03      /*!< Blue reading             */ 
+#define HTCS2_WHITE_REG       0x04      /*!< White channel reading    */
+#define HTCS2_COL_INDEX_REG   0x05      /*!< Color index number       */
+#define HTCS2_RED_NORM_REG    0x06      /*!< Normalised red reading   */
 #define HTCS2_GREEN_NORM_REG  0x07      /*!< Normalised green reading */
-#define HTCS2_BLUE_NORM_REG   0x08      /*!< Normalised blue reading */
+#define HTCS2_BLUE_NORM_REG   0x08      /*!< Normalised blue reading  */
 
 // Different modes
 #define HTCS2_MODE_ACTIVE     0x00      /*!< Use ambient light cancellation */
@@ -91,20 +91,22 @@ bool readSensor(tHTCS2Ptr htcs2Ptr, CalibrationPtr data)
   htcs2Ptr -> I2CData.request[0] = 2;                         // Message size
   htcs2Ptr -> I2CData.request[1] = htcs2Ptr->I2CData.address; // I2C Address
   htcs2Ptr -> I2CData.request[2] = HTCS2_OFFSET + HTCS2_COLNUM_REG;
-  htcs2Ptr -> I2CData.replyLen = 4;
+  htcs2Ptr -> I2CData.replyLen = 5;
   htcs2Ptr -> I2CData.requestLen = 2;
 
   if (!writeI2C(&htcs2Ptr->I2CData))
     return false;
 
-  short red_value   = (short)htcs2Ptr->I2CData.reply[1];
-  short green_value = (short)htcs2Ptr->I2CData.reply[2];
-  short blue_value  = (short)htcs2Ptr->I2CData.reply[3];
+  short red_value   =  (short)htcs2Ptr->I2CData.reply[1];
+  short green_value =  (short)htcs2Ptr->I2CData.reply[2];
+  short blue_value  =  (short)htcs2Ptr->I2CData.reply[3];
+  short white_value  = (short)htcs2Ptr->I2CData.reply[4];
 
   htcs2Ptr -> color = htcs2Ptr->I2CData.reply[0];
   htcs2Ptr -> red 	= red_value;
   htcs2Ptr -> green = green_value;
   htcs2Ptr -> blue	= blue_value;
+  htcs2Ptr -> white	= white_value;
 
   htcs2Ptr -> red_calibrated   = (float)(((red_value -   (float)(data->red_min))   / (float)(data->red_max -   (float)data->red_min)) * (float)255);
   htcs2Ptr -> green_calibrated = (float)(((green_value - (float)(data->green_min)) / (float)(data->green_max - (float)data->green_min)) * (float)255);

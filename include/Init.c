@@ -3,15 +3,15 @@
 #define DEBUG 1
 #define CALIBRATE 0
 
-const float Kp_norm = 0.35;
-const float Ki_norm = 0;
-const float Kd_norm = 12;
+const float Kp_norm = 0.3;
+const float Ki_norm = 0.001;
+const float Kd_norm = 17;
 
-const float Kp_tacho = 4;
-const float Ki_tacho = 0.0015	;
+const float Kp_tacho = 4.5;
+const float Ki_tacho = 0.0015;
 const float Kd_tacho = 20;
 
-const float Kp_tank = 0.8;
+const float Kp_tank = 0.9;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -19,16 +19,16 @@ const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2492;
-const float right_min_sensor = 2464;
+const float left_min_sensor = 2424;
+const float right_min_sensor = 2408;
 
-const float left_max_sensor = 1780;
-const float right_max_sensor = 1716;
+const float left_max_sensor = 1768;
+const float right_max_sensor = 1712;
 
 const float max_speed_const = 80;
 const float min_speed_const = 17;
 
-const float acceleration = 0.04;
+const float acceleration = 0.043;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;

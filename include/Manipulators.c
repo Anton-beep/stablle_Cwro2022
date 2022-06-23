@@ -124,7 +124,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 170, 60, 1);
+    moveMotor(grabMotor, 222, 40, 1);
     motor[grabMotor] = 0;
     stopMotor(grabMotor, 1);
 
@@ -161,6 +161,13 @@ task prepareForDropFirst(){
     taskFlag_prepareForDropFirst = 0;
 
     stopTask(prepareForDropFirst);
+}
+
+task openGrabMotor(){
+    motor[grabMotor] = -30;
+    delay(2000);
+    motor[grabMotor] = 0;
+    stopTask(openGrabMotor);
 }
 
 void takeCube()

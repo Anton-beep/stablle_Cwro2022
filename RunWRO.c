@@ -1,6 +1,6 @@
 #pragma config(Sensor, S1,     leftSensor,     sensorLightActive)
 #pragma config(Sensor, S2,     rightSensor,    sensorLightActive)
-#pragma config(Sensor, S3,     HTleft,         sensorI2CCustom)
+#pragma config(Sensor	, S3,     HTleft,         sensorI2CCustom)
 #pragma config(Sensor, S4,     HTright,        sensorI2CCustom)
 #pragma config(Motor,  motorA,          leftMotor,     tmotorEV3_Medium, PIDControl, encoder)
 #pragma config(Motor,  motorB,          rightMotor,    tmotorEV3_Medium, PIDControl, encoder)
@@ -48,7 +48,7 @@ task main()
 
 	motor[grabMotor] = 0;
 
-	readIndicators(17);
+	readIndicators(20);
 	RightRoom();
 	LeftRoom();
 	fromFirstPairRoomsToFrames();
@@ -58,13 +58,12 @@ task main()
 	cubes[0] = 0;
 	cubes[1] = 0;
 	fromFramesToSecondPairRooms();
-	readIndicators(12);
+	readIndicators(15);
 	RightRoom();
 	LeftRoom();
 	fromSecondPairRoomsToFrames();
-	BrakeLeftRightMotor(1);
-	sleep(2000);
 	frames(0);
+	finish();
 	BrakeLeftRightMotor(1);
 	sleep(2000);
 	#if LOGGING == 1
