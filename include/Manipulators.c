@@ -52,8 +52,8 @@ task motorGrabFullDown(){
     sleep(200);
     while (fabs(nMotorEncoder[centMotor]) - fabs(past_enc_centMotor) > 1){
         past_enc_centMotor = nMotorEncoder[centMotor];
-        sleep(20);
         setMotorSpeed(centMotor, 100);
+        sleep(50);
     }
     taskFlag_motorGrabFullDown = 0;
     stopTask(motorGrabFullDown);
@@ -124,7 +124,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 222, 40, 1);
+    moveMotor(grabMotor, 210, 40, 1);
     motor[grabMotor] = 0;
     stopMotor(grabMotor, 1);
 
@@ -145,7 +145,7 @@ task prepareForBall(){
 task dropBottleOnTable(){
     taskFlag_dropBottleOnTable = 1;
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 110, -20, 0);
+    moveMotor(centMotor, 110, -18, 0);
     stopMotor(centMotor, 1);
     taskFlag_dropBottleOnTable = 0;
     stopTask(dropBottleOnTable);
@@ -172,7 +172,7 @@ task openGrabMotor(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 170, 40, 1);
+    moveMotor(grabMotor, 173, 40, 1);
 }
 
 void closeBall(){

@@ -3,15 +3,15 @@
 #define DEBUG 1
 #define CALIBRATE 0
 
-const float Kp_norm = 0.3;
+const float Kp_norm = 0.38;
 const float Ki_norm = 0.001;
 const float Kd_norm = 17;
 
-const float Kp_tacho = 4.5;
+const float Kp_tacho = 4;
 const float Ki_tacho = 0.0015;
 const float Kd_tacho = 20;
 
-const float Kp_tank = 0.9;
+const float Kp_tank = 0.85;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -19,20 +19,22 @@ const float axleTrack = 178;
 const float wheelDiameter = 80;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor = 2424;
-const float right_min_sensor = 2408;
+const float left_min_sensor = 2460;
+const float right_min_sensor = 2464;
 
-const float left_max_sensor = 1768;
-const float right_max_sensor = 1712;
+const float left_max_sensor = 1740;
+const float right_max_sensor = 1684;
 
 const float max_speed_const = 80;
 const float min_speed_const = 17;
 
-const float acceleration = 0.043;
+const float acceleration = 0.05;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;
 long rawFrames[3] = {0, 0, 0};
+
+short bibob = 0;
 
 const float acceleration_turn = 0.04;
 
@@ -48,6 +50,9 @@ float pr_error_tacho = 0;
 
 long framesColor[3] = {1000, 1000, 1000};
 short cubes[2] = {-1, -1};
+
+short rightRoomTables[2] = {4, 2};
+short leftRoomTables[2] =  {3, 1};
 
 typedef struct {
 	tMotor max_motor_element;

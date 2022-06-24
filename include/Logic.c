@@ -113,13 +113,12 @@ void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
     preTurnStop();
     startTask(motorGrabFullDown);
     startTask(prepareForCube, 20);
-    AccelerationDist(20, 0, 14, 14);
-    AccelerationDist(27, 0.2, 13, 12);
-
+    AccelerationDist(40, 0);
     preTurnStop(100);
-
     waitTask(&taskFlag_motorGrabFullDown);
     waitTask(&taskFlag_prepareForCube);
+    preTurnStop(100);
+
     takeCube();
     now_cubes++;
 }
@@ -145,6 +144,8 @@ void BallRightRoom(byte cube = 0){
         getCube();
     }
 
+    preTurnStop(300);
+
     if (cube == 0){
         if (now_cubes){
             startTask(OneCubePreBall);
@@ -168,8 +169,10 @@ void BallRightRoom(byte cube = 0){
         add_angle = -3;
     }
 
+    preTurnStop(150);
+
     waitTask(&taskFlag_motorGrabFullDown);
-    AccelerationDist(75, 0.5,  min_speed_const,  min_speed_const, 0.02);
+    AccelerationDist(78, 0.5,  min_speed_const,  min_speed_const, 0.02);
     AccelerationDist(17, 0, min_speed_const, 11);
     preTurnStop();
     closeBall();
@@ -197,7 +200,7 @@ void BallRightRoom(byte cube = 0){
 
 void fromFramesToSecondPairRooms(){
     preTurnStop();
-    AbsTurn(223);
+    AbsTurn(227);
     preTurnStop();
     AccelerationDist(230);
     motor[leftMotor] = -12;
@@ -208,8 +211,8 @@ void fromFramesToSecondPairRooms(){
     }
     preTurnStop();
     RightWheelTurn(28);
-    AccelerationLinePID(50, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
-    LeftWheelTurn(18);
+    AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
+    LeftWheelTurn(17);
     preTurnStop(50);
     AccelerationLinePID(100, 1);
 }
@@ -233,10 +236,10 @@ void WaterRightRoom(byte cube = 0){
 
     startTask(dropBottleOnTable);
     if (right_bottle){
-        LeftWheelTurn(-30);
+        LeftWheelTurn(-25);
     }
     else{
-        RightWheelTurn(-30);
+        RightWheelTurn(-25);
     }
 
     preTurnStop(100);
@@ -248,12 +251,12 @@ void WaterRightRoom(byte cube = 0){
     startTask(normalizeCentMotor);
     preTurnStop();
     if (right_bottle){
-        LeftWheelTurn(-63);
+        LeftWheelTurn(-69);
         AccelerationDist(75);
         right_bottle = 0;
     }
     else {
-        RightWheelTurn(22);
+        RightWheelTurn(25);
         LeftWheelTurn(-97.5);
         AccelerationDist(130);
         left_bottle = 0;
@@ -266,15 +269,16 @@ float RightRoom(){
         float start_time = getTimerValue(T2);
     #endif
 
-    AccelerationDist(196, 0.4);
+    AccelerationDist(199, 0.4);
 
-    preTurnStop(200);
-    readRightSen_noMove(5, &WashInfoRawRight, 20);
-
+    preTurnStop(100);
+    readRightSen_noMove(20, &WashInfoRawRight, 5);
+    
     short cube = get_colorWash_right(ht_results[1]);
     cubes[0] = cube;
-    
+
     AccelerationDist(-39, 0);
+    preTurnStop(100);
     if (right_room_indicator == 2){
         BallRightRoom(cube);
     }
@@ -295,6 +299,8 @@ float RightRoom(){
 
 void BallLeftRoom(byte cube = 0){
 
+    preTurnStop(150);
+
     short add_angle = 0;
 
     if (cube){
@@ -309,6 +315,8 @@ void BallLeftRoom(byte cube = 0){
             startTask(prepareForBall);
         }
     }
+
+    preTurnStop(50);
 
     if (cube){
         AccelerationDist(-47, 0);
@@ -339,14 +347,14 @@ void BallLeftRoom(byte cube = 0){
     stopTask(prepareForCube);
 
     startTask(BallDrop);
-    AccelerationDist(45);
+    AccelerationDist(50);
     preTurnStop();
     waitTask(&taskFlag_BallDrop);
 
     if ((now_cubes == 2) && (left_room_indicator == 2) && (cube)){
         TankTurn(-38);
         preTurnStop();
-        AccelerationDist(-10);
+        AccelerationDist(-35);
         preTurnStop();
 
         stopMotor(centMotor, 1);
@@ -372,13 +380,15 @@ void BallLeftRoom(byte cube = 0){
         short buffer = cubes[0];
         cubes[0] = cubes[1];
         cubes[1] = buffer;
+        AccelerationDist(25);
+        preTurnStop();
     }
     else{
         startTask(normalizeCentMotor);
         preTurnStop();
     }
 
-    TankTurn(116 + add_angle);
+    TankTurn(120 + add_angle);
     preTurnStop();
     AccelerationDist(115);
 
@@ -407,10 +417,10 @@ void WaterLeftRoom(byte cube = 0){
 
     startTask(dropBottleOnTable);
     if (left_bottle){
-        RightWheelTurn(-30);
+        RightWheelTurn(-25);
     }
     else{
-        LeftWheelTurn(-30);
+        LeftWheelTurn(-25);
     }
 
     BrakeLeftRightMotor(1);
@@ -423,12 +433,12 @@ void WaterLeftRoom(byte cube = 0){
     startTask(normalizeCentMotor);
     preTurnStop();
     if (left_bottle){
-        RightWheelTurn(-63);
+        RightWheelTurn(-69);
         AccelerationDist(75);
         left_bottle = 0;
     }
     else {
-        LeftWheelTurn(30);
+        LeftWheelTurn(25);
         RightWheelTurn(-93);
         AccelerationDist(130);
         right_bottle = 0;
@@ -446,8 +456,8 @@ float LeftRoom(){
         motor[grabMotor] = -30;
     }
 
-    preTurnStop(200);
-    readLeftSen_noMove(5,  &WashInfoRawLeft, 20);
+    preTurnStop(100);
+    readLeftSen_noMove(20,  &WashInfoRawLeft, 5);
 
     motor[grabMotor] = 0;
 
@@ -475,6 +485,7 @@ float LeftRoom(){
     }
 
     AccelerationDist(-39 + add_deg, 0);
+    preTurnStop(100);
     if (left_room_indicator == 2){
         BallLeftRoom(cube);
     }
@@ -494,23 +505,28 @@ float LeftRoom(){
 }
 
 void fromFirstPairRoomsToFrames(){
-    RightWheelTurn(104);
+    AccelerationDist(BetweenSensorsAndMiddle);
+    preTurnStop(100);
+    TankTurn(90);
     pr_error = 0;
-    AccelerationLinePID(290, 1, 0.7);
-    AccelerationLinePID(217, 0, 0.5, fabs(motor[leftMotor]));
+    AccelerationLinePID(320, 1, 0.7);
+    AccelerationLinePID(210, 0, 0.5, fabs(motor[leftMotor]));
     float speed = fabs(motor[rightMotor]);
-    PointTurn(250, 0, 90, 1, 0.3, speed);
+    PointTurn(250, 0, 90, 1);
 }
 
 void fromSecondPairRoomsToFrames(){
-    RightWheelTurn(105);
+    AccelerationDist(BetweenSensorsAndMiddle);
+    preTurnStop(100);
+    TankTurn(90);
+    preTurnStop(50);
     AccelerationLinePID(20, 0, 1);
     AccelerationLinePID(270, 1, 0.48);
     AccelerationDist(BetweenSensorsAndMiddle);
     preTurnStop();
     TankTurn(-20);
     preTurnStop();
-    AccelerationDist(430);
+    AccelerationDist(423);
     preTurnStop();
     TankTurn(-70);
     preTurnStop(50);
@@ -696,7 +712,9 @@ void finish(){
     preTurnStop();
     AbsTurn(180);
     preTurnStop();
-    AccelerationLinePID(35);
+    AccelerationDist(-70);
+    preTurnStop();
+    AccelerationLinePID(105);
     AccelerationDist(215);
     preTurnStop();
     TankTurn(45);
