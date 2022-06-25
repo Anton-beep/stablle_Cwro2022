@@ -75,8 +75,9 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 190, 100, 1);
+    moveMotor(centMotor, 195, 70, 1);
     stopMotor(centMotor, 1);
+    delay(100);
     moveMotor(grabMotor, -140, -100, 1);
 
     taskFlag_BallDrop = 0;
@@ -124,8 +125,7 @@ task normalizeCentMotor()
 task prepareForCube(){
     taskFlag_prepareForCube = 1;
 
-    moveMotor(grabMotor, 210, 40, 1);
-    motor[grabMotor] = 0;
+    moveMotor(grabMotor, 300, 40, 1);
     stopMotor(grabMotor, 1);
 
     taskFlag_prepareForCube = 0;
@@ -172,7 +172,7 @@ task openGrabMotor(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 173, 40, 1);
+    moveMotor(grabMotor, 140, 40, 1);
 }
 
 void closeBall(){

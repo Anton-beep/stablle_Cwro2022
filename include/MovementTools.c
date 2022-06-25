@@ -68,7 +68,7 @@ void moveMotor(tMotor motorName, int deg, int speed, char stop)
 {
 	float start_deg = fabs(nMotorEncoder[motorName]);
 	motor[motorName] = speed;
-	while (MotorAbsMovedDegrees(motorName, start_deg) < (fabs(deg) - 1)){}
+	while (MotorAbsMovedDegrees(motorName, start_deg) < (fabs(deg))){}
 	stopMotor(motorName, stop);
 }
 

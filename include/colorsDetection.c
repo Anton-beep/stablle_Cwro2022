@@ -46,7 +46,7 @@ int get_colorFrame_first(int rawHTRes){
     if (rawHTRes > 25){ // 32 36
         return 4;
     }
-    else if (rawHTRes > 15){
+    else if (rawHTRes > 18){
         return 1;
     }
     else{

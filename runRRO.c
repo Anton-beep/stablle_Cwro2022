@@ -29,6 +29,7 @@ task main()
 	setSoundVolume(10);
 	check_battery();
 	setSoundVolume(10);
+	stopMotor(grabMotor, 1);
 
 	InitMarkerCallibrationRaw();
 	InitWashCallibrationRaw();
@@ -47,12 +48,13 @@ task main()
 	TakeBottles();
 
 	motor[grabMotor] = 0;
+	nMotorEncoder[grabMotor] = 0;
 
 	readIndicators(20);
 	RightRoom();
 	LeftRoom();
 	fromFirstPairRoomsToFrames();
-	AccelerationLinePID(20, 1);
+	AccelerationLinePID(20, 1, 0);
 	frames();
 	bibob++;
 	now_cubes = 0;
@@ -66,8 +68,9 @@ task main()
 	frames(0);
 	finish();
 	BrakeLeftRightMotor(1);
+
 	sleep(2000);
 	#if LOGGING == 1
 		fileClose(fileHandle);
 	#endif
-}
+	}
