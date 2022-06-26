@@ -11,7 +11,7 @@ const float Kp_tacho = 4.2;
 const float Ki_tacho = 0.001;
 const float Kd_tacho = 18;
 
-const float Kp_tank = 0.9;
+const float Kp_tank = 0.8;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -28,15 +28,16 @@ const float right_max_sensor = 1684;
 const float max_speed_const = 80;
 const float min_speed_const = 16;
 
-const float acceleration = 0.055;
+float acceleration = 0.055;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;
 long rawFrames[3] = {0, 0, 0};
 
 short bibob = 0;
-
-const float acceleration_turn = 0.04;
+short people[3] = {0, 0, 0};
+short rgb[3] = {0, 0, 0}
+float acceleration_turn = 0.04;
 
 byte left_bottle  = 1;
 byte right_bottle = 1;

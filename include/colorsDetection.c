@@ -65,3 +65,21 @@ int get_colorFrame_second(int rawHTRes){
         return 5;
     }
 }
+
+short get_people_color(){
+    if (ht_results[1] > 175){
+        return 4;
+    }
+    else{
+        if ((rgb[0] > rgb[1]) && (rgb[0] > rgb[2])){
+            return 1;
+        }
+        if ((rgb[1] > rgb[0]) && (rgb[1] > rgb[2])){
+            return 2;
+        }
+        if ((rgb[2] > rgb[0]) && (rgb[2] > rgb[1])){
+            return 3;
+        }
+    }
+    return 0;
+}
