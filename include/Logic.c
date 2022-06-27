@@ -76,11 +76,35 @@ float readIndicators(short preTurnmm = 18){
 }
 
 void fromRightRoomToLeft(int degrees){
-    acceleration = 0.02;
-    AccelerationLinePID(degrees - 30, 1, 0.5, min_speed_const, acceleration - 0.01, 77, 0, 0, 10);
-    AccelerationDist(30);
-    AccelerationLinePID(170, 0, 0.5, min_speed_const, acceleration - 0.01, 77, 0, 0, 10);
-    acceleration = 0.055;
+    if (now_cubes == 0){
+        motor[grabMotor] = -60;
+    }
+
+    if (now_cubes == 1){
+        startTask(OneCubePreBall);
+    }
+
+    AccelerationLinePID(degrees - 10, 0, 0.7, min_speed_const, acceleration - 0.01, 82, 0, 0, 10);
+
+    float speed = fabs(motor[leftMotor]);
+
+    while ((results_sensors.firstSensor > 50) || (results_sensors.secondSensor > 50)){
+		DrivePID(speed, 82, 0, 0);
+    }
+
+    if (now_cubes == 0){
+        motor[grabMotor] = 0;
+    }
+    
+    AccelerationDist(30, 0.7, speed);
+    
+    speed = fabs(motor[leftMotor]);
+
+    AccelerationLinePID(170, 0.82, 0, speed, acceleration, 82, 0, 0, 10);
+
+    speed = fabs(motor[leftMotor]);
+
+    AccelerationDist(203, 0, speed);
 }
 
 void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
@@ -172,7 +196,6 @@ void BallRightRoom(byte cube = 0){
 
 void fromFramesToSecondPairRooms(){
     preTurnStop();
-    NOW_ANGLE = 180;
     AbsTurn(227);
     preTurnStop();
     AccelerationDist(230);
@@ -188,7 +211,6 @@ void fromFramesToSecondPairRooms(){
     LeftWheelTurn(17);
     preTurnStop(50);
     AccelerationLinePID(100, 1);
-    TankTurn(180);
 }
 
 void WaterRightRoom(byte cube = 0){
@@ -240,84 +262,26 @@ void WaterRightRoom(byte cube = 0){
     fromRightRoomToLeft(160);
 }
 
-void DropPeople(short index){
-    acceleration = 0.01;
-    acceleration_turn = 0.035;
-    if (index == 0){
-        TankTurn(180);
-        preTurnStop();
-        startTask(motorWaterFullDownPeople);
-        delay(100);
-        waitTask(&taskFlag_motorWaterFullDown);
-        preTurnStop();
-        RightWheelTurn(-30);
-        preTurnStop();
-        RightWheelTurn(30);
-        preTurnStop()
-        startTask(normalizeCentMotor);
-        delay(200);
-    }
-    else if(index == 2){
-        TankTurn(180);
-        preTurnStop();
-        startTask(motorWaterFullDownPeople);
-        delay(100);
-        waitTask(&taskFlag_motorWaterFullDown);
-        preTurnStop();
-
-        LeftWheelTurn(-30);
-        preTurnStop();
-        LeftWheelTurn(30);
-        preTurnStop();
-        startTask(normalizeCentMotor);
-        delay(200);        
-    }
-    else if(index == 1){
-        startTask(prepareForDropFirst);
-        waitTask(&taskFlag_prepareForDropFirst);
-        preTurnStop();
-        
-        LeftWheelTurn(-60);
-        preTurnStop();
-        AccelerationDist(100);
-        preTurnStop();
-
-        AccelerationDist(-100);
-        preTurnStop();
-        startTask(normalizeCentMotor);
-        waitTask(&taskFlag_normalizeCentMotor);
-
-        preTurnStop();
-
-        LeftWheelTurn(60);
-        preTurnStop();
-        TankTurn(180);
-    }
-    else{
-        TankTurn(180);
-    }
-    acceleration = 0.05;
-    acceleration_turn = 0.04;
-}
-
 float RightRoom(){
     #if TIMER == 1
         float start_time = getTimerValue(T2);
     #endif
 
-    AccelerationDist(100, 0.4);
-    preTurnStop();
+    AccelerationDist(199, 0.4);
 
-    short correct = -1; 
-    for (int i = 0; i < 3; i++){
-        if (rightRoomTables[bibob] == people[i]){
-            correct = i;
-        }
-    }
+    preTurnStop(100);
+    readRightSen_noMove(20, &WashInfoRawRight, 5);
     
-    DropPeople(correct);
-    preTurnStop(200)
-    fromRightRoomToLeft(80);
+    short cube = get_colorWash_right(ht_results[1]);
+    cubes[0] = cube;
+
+    AccelerationDist(-39, 0);
+    if (right_room_indicator == 2){
+        BallRightRoom(cube);
+    }
+    else{
+        WaterRightRoom(cube);
+    }
 
     #if LOGGING == 1
         writeRightRoomInfo(ht_results[1], cube);
@@ -470,19 +434,48 @@ float LeftRoom(){
         float start_time = getTimerValue(T2);
     #endif
 
-    AccelerationDist(100, 0.4);
-    preTurnStop();
-
-    short correct = -1; 
-    for (int i = 0; i < 3; i++){
-        if (leftRoomTables[bibob] == people[i]){
-            correct = i;
-        }
+    if (now_cubes == 0){
+        motor[grabMotor] = -30;
     }
-    
-    DropPeople(correct);
-    preTurnStop(200);
-    AccelerationLinePID(50, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
+
+    preTurnStop(100);
+    readLeftSen_noMove(20,  &WashInfoRawLeft, 5);
+
+    motor[grabMotor] = 0;
+
+    short cube = get_colorWash_left(ht_results[0]);
+    cubes[1] = cube;
+    short add_deg = 0;
+    if ((now_cubes) && (left_room_indicator == 2) && (cube)){
+        AccelerationDist(30, 0);
+        preTurnStop();
+
+        startTask(motorGrabFullDown);
+        TankTurn(15);
+        preTurnStop();
+        waitTask(&taskFlag_motorGrabFullDown);
+
+        motor[grabMotor] = -100;
+        delay(100);
+        startTask(normalizeCentMotor);
+        AccelerationDist(50, 0);
+        preTurnStop();
+        AccelerationDist(-50, 0);
+        preTurnStop();
+        TankTurn(-15);
+        motor[grabMotor] = 0;
+        preTurnStop();
+        waitTask(&taskFlag_normalizeCentMotor);
+        add_deg = -30;
+    }
+
+    AccelerationDist(-39 + add_deg, 0);
+    if (left_room_indicator == 2){
+        BallLeftRoom(cube);
+    }
+    else{
+        WaterLeftRoom(cube);
+    }
 
     #if LOGGING == 1
         writeLeftRoomInfo(ht_results[0], cube);
@@ -495,14 +488,15 @@ float LeftRoom(){
     #endif
 }
 
-void fromFirstPairRoomsToSecond(){
+void fromFirstPairRoomsToFrames(){
     AccelerationDist(BetweenSensorsAndMiddle);
     preTurnStop(100);
     TankTurn(90);
     pr_error = 0;
-    AccelerationLinePID(600, 0, 0.5);
-    AccelerationDist(300);
-    AccelerationLinePID(525, 1, 0.5);
+    AccelerationLinePID(320, 1, 0.7);
+    AccelerationLinePID(209, 0, 0.5, fabs(motor[leftMotor]));
+    AccelerationDist(47, 0, fabs(motor[leftMotor]));
+    PointTurn(200, 0, 90, 1, 0.4);
 }
 
 void fromSecondPairRoomsToFrames(){
@@ -521,57 +515,6 @@ void fromSecondPairRoomsToFrames(){
     preTurnStop();
     AccelerationLinePID(60, 1);
     NOW_ANGLE = 360;
-}
-
-void Balls(){
-    AccelerationLinePID(20, 1);
-    preTurnStop();
-    AccelerationDist(BetweenSensorsAndMiddle, 0);
-    preTurnStop();
-    TankTurn(-90);
-    AccelerationLinePID(240, 0);
-    preTurnStop();
-    startTask(prepareForBall);
-    startTask(motorGrabFullDown);
-    waitTask(&taskFlag_motorGrabFullDown);
-    closeBall();
-    startTask(normalizeCentMotor);
-    waitTask(&taskFlag_normalizeCentMotor);
-    AccelerationDist(-130, 0);
-    TankTurn(90);
-    preTurnStop();
-    startTask(BallDrop);
-    waitTask(&taskFlag_BallDrop);
-    startTask(normalizeCentMotor);
-    waitTask(&taskFlag_normalizeCentMotor);
-    motor[grabMotor] = -30;
-    TankTurn(90);
-    preTurnStop();
-    AccelerationLinePID(20, 1);
-    motor[grabMotor] = 0;
-    AccelerationLinePID(240 + BetweenSensorsAndMiddle, 0)
-
-    preTurnStop();
-    startTask(prepareForBall);
-    startTask(motorGrabFullDown);
-    waitTask(&taskFlag_motorGrabFullDown);
-    closeBall();
-    startTask(normalizeCentMotor);
-    waitTask(&taskFlag_normalizeCentMotor);
-    AccelerationDist(-130, 0);
-    TankTurn(-90);
-    preTurnStop();
-    startTask(BallDrop);
-    waitTask(&taskFlag_BallDrop);
-    startTask(normalizeCentMotor);
-    waitTask(&taskFlag_normalizeCentMotor);
-    motor[grabMotor] = -30;
-    TankTurn(-90);
-    preTurnStop();
-    AccelerationLinePID(20, 1);
-    AccelerationDist(BetweenSensorsAndMiddle, 0);
-    TankTurn(-90);
-    fromFramesToSecondPairRooms();
 }
 
 void drop1in1(){
@@ -749,150 +692,20 @@ void frames(short reading = 1){
 }
 
 void finish(){
-    AccelerationDist(BetweenSensorsAndMiddle);
     preTurnStop();
-    TankTurn(90);
-    preTurnStop();
-
-    short finish = 10; 
-    for (int i = 0; i < 3; i++){
-        finish -= people[i];
-    }
-
-    AccelerationLinePID(350, 1);
-
-    if (finish == 1 || finish == 2){
-        AccelerationLinePID(250, 0);
-        if (finish == 1){
-            TankTurn(90);
-        }
-        else{
-            TankTurn(-90);
-        }
-    }
-    else{
-        AccelerationLinePID(640, 0);
-        if (finish == 4){
-            TankTurn(90);
-        }
-        else{
-            TankTurn(-90);
-        }
-    }
-    preTurnStop();
-    AccelerationDist(200);
-    preTurnStop();
-}
-
-void readPeople(int count_times, int timer = 5){
-    TankTurn(45);
-    preTurnStop();
-    AccelerationDist(100, 1);
-    AccelerationLinePID(140, 1, 0, motor[rightMotor]);
-    AccelerationDist(20);
-    preTurnStop();
-
-    short raw[3];
-    preTurnStop();
-	TankTurn(-90);
-    preTurnStop();
-	AccelerationDist(-40, 0, 0.01);
-    preTurnStop(500);
-	readRightSen_noMoveRGB(count_times, &FamesRawRight,timer);
-
-    eraseDisplay();
-    displayString(8,  "%d", rgb[0]);
-    displayString(10, "%d", rgb[1]);
-    displayString(12, "%d", rgb[2]);
-    delay(0);
-
-    raw[0] = ht_results[1];
-    people[0] =  get_people_color()
-    AccelerationDist(95, 0, 0.01);
-    preTurnStop(500);
-
-    readRightSen_noMoveRGB(count_times, &FamesRawRight, timer);
-    eraseDisplay();
-    displayString(8,  "%d", rgb[0]);
-    displayString(10, "%d", rgb[1]);
-    displayString(12, "%d", rgb[2]);
-    delay(0);
-
-    raw[1] = ht_results[1];
-    people[1] =  get_people_color()
-    AccelerationDist(85, 0, 0.01);
-    preTurnStop(500);
-    readRightSen_noMoveRGB(count_times, &FamesRawRight, timer);
-
-    eraseDisplay();
-    displayString(8,  "%d", rgb[0]);
-    displayString(10, "%d", rgb[1]);
-    displayString(12, "%d", rgb[2]);
-    delay(0);
-
-
-    raw[2] = ht_results[1];
-    people[2] =  get_people_color();
-    eraseDisplay();
-    displayString(8,  "%d", raw[0]);
-    displayString(10, "%d", raw[1]);
-    displayString(12, "%d", raw[2]);
-    delay(0);
-
-    eraseDisplay();
-    displayString(8,  "%d", people[0]);
-    displayString(10, "%d", people[1]);
-    displayString(12, "%d", people[2]);
-    delay(2000);
-
-    acceleration = 0.03;
-
-    AccelerationDist(-140);
-    preTurnStop();
-    TankTurn(-90);
-    preTurnStop();
-    acceleration = 0.01;
-    AccelerationLinePID(60, 0);
+    AbsTurn(180);
     startTask(motorWaterFullDown);
-    AccelerationDist(50, 0, motor[rightMotor]);
-    acceleration = 0.02;
+    preTurnStop();
+    delay(300);
+    AccelerationDist(-70);
     preTurnStop();
     waitTask(&taskFlag_motorWaterFullDown);
-
-    AccelerationDist(-160);
-    startTask(setNormAfterWaterFullDown);
-    delay(200);
-    preTurnStop();
-    
-    AccelerationLinePID(80);
-    preTurnStop();
-    TankTurn(180);
-    preTurnStop();
-    AccelerationLinePID(10, 1);
-    AccelerationLinePID(32);
-    preTurnStop();
-
-    startTask(prepareForDropFirst);
-    waitTask(&taskFlag_prepareForDropFirst);
-    preTurnStop();
-
-    LeftWheelTurn(60);
-    preTurnStop();
-
     startTask(normalizeCentMotor);
-    waitTask(&taskFlag_normalizeCentMotor);
-
+    delay(100);
+    AccelerationLinePID(105);
+    AccelerationDist(215);
     preTurnStop();
-
-    LeftWheelTurn(-60);
+    TankTurn(45);
     preTurnStop();
-    TankTurn(180);
-
-    acceleration = 0.055;
-
-    AccelerationLinePID(62);
-
-    PointTurn(250, 0, 90, 1);
-
-    AccelerationLinePID(370, 1, 0.6);
+    AccelerationDist(10);
 }

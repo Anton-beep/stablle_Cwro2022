@@ -11,10 +11,10 @@ void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short 
 		cof = 0.7;
 	}
 	if (speed < 30){
-		cof = 0.68;
+		cof = 0.65;
 	}
 	if (speed < 20){
-		cof = 0.8;
+		cof = 0.75;
 	}
 
 	float actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof;

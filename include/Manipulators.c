@@ -17,7 +17,7 @@ task setNormAfterWaterFullDown(){
     float start_deg = fabs(nMotorEncoder[centMotor]);
     short sign =   getSign(nMotorEncoder[centMotor]);
     short deg = 220 * -1;
-	motor[centMotor] = -10 * sign;
+	motor[centMotor] = -25 * sign;
 	while (MotorAbsMovedDegrees(centMotor, start_deg) < (fabs(deg))){
         if (getSign(nMotorEncoder[centMotor]) != sign){
             break;
@@ -35,20 +35,6 @@ task motorWaterFullDown(){
     taskFlag_motorWaterFullDown = 1;
     int past_enc_centMotor = fabs(nMotorEncoder[centMotor]);
     setMotorSpeed(centMotor, -100);
-    sleep(200);
-    while (fabs(nMotorEncoder[centMotor]) - fabs(past_enc_centMotor) > 1){
-        past_enc_centMotor = nMotorEncoder[centMotor];
-        sleep(10);
-    }
-    sleep(100);
-    taskFlag_motorWaterFullDown = 0;
-    stopTask(motorWaterFullDown);
-}
-
-task motorWaterFullDownPeople(){
-    taskFlag_motorWaterFullDown = 1;
-    int past_enc_centMotor = fabs(nMotorEncoder[centMotor]);
-    setMotorSpeed(centMotor, -20);
     sleep(200);
     while (fabs(nMotorEncoder[centMotor]) - fabs(past_enc_centMotor) > 1){
         past_enc_centMotor = nMotorEncoder[centMotor];
@@ -89,7 +75,7 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 130, 70, 1);
+    moveMotor(centMotor, 195, 70, 1);
     stopMotor(centMotor, 1);
     delay(100);
     moveMotor(grabMotor, -140, -100, 1);

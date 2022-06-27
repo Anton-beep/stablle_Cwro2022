@@ -45,27 +45,27 @@ task main()
 
 	motor[grabMotor] = -30;
 
-	BrakeLeftRightMotor(1);
-
-	readPeople(20, 5);
+	TakeBottles();
 
 	motor[grabMotor] = 0;
-	stopMotor(grabMotor, 0);
 	nMotorEncoder[grabMotor] = 0;
 
 	readIndicators(20);
 	RightRoom();
 	LeftRoom();
-	fromFirstPairRoomsToSecond();
+	fromFirstPairRoomsToFrames();
+	AccelerationLinePID(20, 1, 0);
+	frames();
 	bibob++;
 	now_cubes = 0;
 	cubes[0] = 0;
 	cubes[1] = 0;
+	fromFramesToSecondPairRooms();
 	readIndicators(15);
 	RightRoom();
 	LeftRoom();
 	fromSecondPairRoomsToFrames();
-	Balls();
+	frames(0);
 	finish();
 	BrakeLeftRightMotor(1);
 
