@@ -17,7 +17,7 @@ task setNormAfterWaterFullDown(){
     float start_deg = fabs(nMotorEncoder[centMotor]);
     short sign =   getSign(nMotorEncoder[centMotor]);
     short deg = 220 * -1;
-	motor[centMotor] = -25 * sign;
+	motor[centMotor] = -15 * sign;
 	while (MotorAbsMovedDegrees(centMotor, start_deg) < (fabs(deg))){
         if (getSign(nMotorEncoder[centMotor]) != sign){
             break;
@@ -75,7 +75,7 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 195, 70, 1);
+    moveMotor(centMotor, 205, 70, 1);
     stopMotor(centMotor, 1);
     delay(100);
     moveMotor(grabMotor, -140, -100, 1);
@@ -179,3 +179,44 @@ void closeBall(){
     setMotorSpeed(grabMotor, 70);
     sleep(500);
 }
+
+
+/*
+float driveMotorPID(int speed, int degrees, int startEncoder, tMotor motorName, short stop){
+    error = degrees - (nMotorEncoder[motorName] - startEncoder);
+
+    float actionP =  error * 5;
+    float actionI = (error + error_manip) * 0.2;
+    float actionD = (error - error_manip) * 10;
+
+    float steer = actionP + actionI + actionD;
+
+    error_manip = error;
+
+    return steer
+}
+void moveMotorPID(int speed, int degrees, int startEncoder, tMotor motorName, short stop){
+    float error = 1000;
+    while (fabs(error)){
+        float steer = driveMotorPID(speed, degrees, startEncoder, motorName);
+
+        pr_error = error;
+        if ((fabs(speed + steer)) > (speed)){
+            motor[motorName] = speed * getSign(steer);
+        }
+        else{
+            motor[motorName] = speed + steer;
+        }
+
+        
+        delay(2);
+
+        displayTextLine(4, "%d", error);
+        displayTextLine(6, "%d", nMotorEncoder[motorName]);
+        displayTextLine(8, "%d", steer);
+        displayTextLine(10, "%d", startEncoder);
+    }
+
+    stopMotor(motorName, stop);
+}
+*/

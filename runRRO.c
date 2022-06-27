@@ -44,9 +44,7 @@ task main()
 	#endif
 
 	motor[grabMotor] = -30;
-
 	TakeBottles();
-
 	motor[grabMotor] = 0;
 	nMotorEncoder[grabMotor] = 0;
 

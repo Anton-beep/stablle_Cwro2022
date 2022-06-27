@@ -1,6 +1,11 @@
 void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short reverse = 0){
 	SensorsToPercent();
 
+	short flag = 0;
+	if ((firstElement == 0) && (secondElement == 0)){
+		flag = 1;
+	}
+
 	firstElement =  firstElement  ? firstElement  : results_sensors.firstSensor;
 	secondElement = secondElement ? secondElement : results_sensors.secondSensor;
 
@@ -17,9 +22,20 @@ void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short 
 		cof = 0.75;
 	}
 
-	float actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof;
-	float actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof;
-	float actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof;
+	float actionP = 0;
+	float actionI = 0;
+	float actionD = 0;
+	if (flag){
+		actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof;
+		actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof;
+		actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof;
+	}
+	else{
+		actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
+		actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
+		actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
+	}
+	
 	float steer = actionP + actionI + actionD;
 	pr_error = error;
 

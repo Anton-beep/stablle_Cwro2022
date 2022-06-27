@@ -65,3 +65,39 @@ int get_colorFrame_second(int rawHTRes){
         return 5;
     }
 }
+
+short get_wash_color_right(int rawHTRes){
+    if (rawHTRes < 10){
+        return 0;
+    }
+    if (rawHTRes > 128){
+        return 4;
+    }
+    else{
+		if ((rgb[0] < 35) && (rawHTRes > 10)){
+			return 5;
+		}
+        if ((rgb[0] > rgb[1]) && (rgb[0] > rgb[2])){
+            return 1;
+        }
+    }
+    return 0;
+}
+
+short get_wash_color_left(int rawHTRes){
+    if (rawHTRes < 10){
+        return 0;
+    }
+    if (rawHTRes > 128){
+        return 4;
+    }
+    else{
+		if ((rgb[0] < 50) && (rawHTRes > 10)){
+			return 5;
+		}
+        if ((rgb[0] > rgb[1]) && (rgb[0] > rgb[2])){
+            return 1;
+        }
+    }
+    return 0;
+}

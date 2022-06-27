@@ -131,3 +131,76 @@ void readLeftSen_noMove(int count_times, CalibrationHiTechData* calibration, int
 
 	ht_results[0] = (sum_w) / (count_times);
 }
+
+void readRightSen_noMoveRGB(int count_times, CalibrationHiTechData* calibration, int timer = 100){
+	int sum_rr = 0;
+	int sum_gr = 0;
+	int sum_br = 0;
+	
+	for (int i = 0; i < count_times; i++){
+		readSensor(&colorRightSensor,  &WashInfoRawRight);
+
+		#if LOGGING == 1
+			char r[10];
+			char g[10];
+			char b[10];
+			
+			sprintf(r, "%d", colorRightSensor.red);
+			sprintf(g, "%d", colorRightSensor.green);
+			sprintf(b, "%d", colorRightSensor.blue);
+
+			fileWriteData(fileHandle, r,  strlen(r) + 1);
+			fileWriteData(fileHandle, g,  strlen(g) + 1);
+			fileWriteData(fileHandle, b,  strlen(b) + 1);
+
+			fileWriteData(fileHandle, end, strlen(end) + 1);
+		#endif
+
+
+		sum_rr += colorRightSensor.red;
+		sum_gr += colorRightSensor.green;
+		sum_br += colorRightSensor.blue;
+	}
+
+	rgb[0] = sum_rr / count_times;
+	rgb[1] = sum_gr / count_times;
+	rgb[2] = sum_br / count_times;
+
+	ht_results[1] = (sum_rr + sum_gr + sum_br) / (count_times);
+}
+
+void readLeftSen_noMoveRGB(int count_times, CalibrationHiTechData* calibration, int timer = 100){
+	int sum_rr = 0;
+	int sum_gr = 0;
+	int sum_br = 0;
+	
+	for (int i = 0; i < count_times; i++){
+		readSensor(&colorLeftSensor,  &WashInfoRawLeft);
+
+		#if LOGGING == 1
+			char r[10];
+			char g[10];
+			char b[10];
+
+			sprintf(r, "%d", colorLeftSensor.red);
+			sprintf(g, "%d", colorLeftSensor.green);
+			sprintf(b, "%d", colorLeftSensor.blue);
+
+			fileWriteData(fileHandle, r,  strlen(r) + 1);
+			fileWriteData(fileHandle, g,  strlen(g) + 1);
+			fileWriteData(fileHandle, b,  strlen(b) + 1);
+
+			fileWriteData(fileHandle, end, strlen(end) + 1);
+		#endif
+
+		sum_rr += colorLeftSensor.red;
+		sum_gr += colorLeftSensor.green;
+		sum_br += colorLeftSensor.blue;
+	}
+
+	rgb[0] = sum_rr / count_times;
+	rgb[1] = sum_gr / count_times;
+	rgb[2] = sum_br / count_times;
+
+	ht_results[0] = (sum_rr + sum_gr + sum_br) / (count_times);
+}
