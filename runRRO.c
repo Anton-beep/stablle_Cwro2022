@@ -47,6 +47,7 @@ task main()
 	TakeBottles();
 	motor[grabMotor] = 0;
 	nMotorEncoder[grabMotor] = 0;
+	stopMotor(grabMotor, 0);
 
 	readIndicators(20);
 	RightRoom();
@@ -59,7 +60,7 @@ task main()
 	cubes[0] = 0;
 	cubes[1] = 0;
 	fromFramesToSecondPairRooms();
-	readIndicators(15);
+	readIndicators(16);
 	RightRoom();
 	LeftRoom();
 	fromSecondPairRoomsToFrames();

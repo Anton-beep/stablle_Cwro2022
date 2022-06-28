@@ -75,10 +75,10 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 205, 70, 1);
+    moveMotor(centMotor, 260, 70, 1);
     stopMotor(centMotor, 1);
-    delay(100);
-    moveMotor(grabMotor, -140, -100, 1);
+    delay(25);
+    moveMotor(grabMotor, -140, -100, 0);
 
     taskFlag_BallDrop = 0;
     stopTask(BallDrop);
@@ -145,7 +145,7 @@ task prepareForBall(){
 task dropBottleOnTable(){
     taskFlag_dropBottleOnTable = 1;
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 110, -18, 0);
+    moveMotor(centMotor, 110, -15, 0);
     stopMotor(centMotor, 1);
     taskFlag_dropBottleOnTable = 0;
     stopTask(dropBottleOnTable);
@@ -155,7 +155,7 @@ task prepareForDropFirst(){
     taskFlag_prepareForDropFirst = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 200, 60, 0);
+    moveMotor(centMotor, 260, 60, 0);
     stopMotor(centMotor, 1);
 
     taskFlag_prepareForDropFirst = 0;
@@ -172,7 +172,7 @@ task openGrabMotor(){
 
 void takeCube()
 {
-    moveMotor(grabMotor, 140, 40, 1);
+    moveMotor(grabMotor, 160, 40, 1);
 }
 
 void closeBall(){

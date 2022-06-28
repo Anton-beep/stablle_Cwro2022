@@ -114,8 +114,10 @@ void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
 
     startTask(prepareForCube);
     startTask(motorGrabFullDown);
-    AccelerationDist(45, 0, 16, 13, 0.05);
-    preTurnStop(100);
+
+    AccelerationDist(45, 0.04, min_speed_const, 10, 0.025);
+    preTurnStop(50);
+
     waitTask(&taskFlag_motorGrabFullDown);
 
     takeCube();
@@ -171,8 +173,7 @@ void BallRightRoom(byte cube = 0){
     waitTask(&taskFlag_OneCubePreBall);
     waitTask(&taskFlag_prepareForBall);
 
-    AccelerationDist(74, 0.5,  min_speed_const,  min_speed_const, 0.02);
-    AccelerationDist(17, 0, min_speed_const, 11);
+    AccelerationDist(85, 0.2,  min_speed_const,  10, 0.04);
     preTurnStop();
     closeBall();
     startTask(normalizeCentMotor);
@@ -181,12 +182,12 @@ void BallRightRoom(byte cube = 0){
     waitTask(&taskFlag_normalizeCentMotor);
 
     startTask(BallDrop);
-    AccelerationDist(45);
+    AccelerationDist(53);
     preTurnStop();
     waitTask(&taskFlag_BallDrop);
 
     startTask(normalizeCentMotor);
-    TankTurn(-117 + add_angle);
+    TankTurn(-119 + add_angle);
     preTurnStop();
     waitTask(&taskFlag_normalizeCentMotor);
 
@@ -196,7 +197,7 @@ void BallRightRoom(byte cube = 0){
 
 void fromFramesToSecondPairRooms(){
     preTurnStop();
-    AbsTurn(230);
+    AbsTurn(224.5);
     preTurnStop();
     AccelerationDist(230);
     motor[leftMotor] = -12;
@@ -328,8 +329,8 @@ void BallLeftRoom(byte cube = 0){
         waitTask(&taskFlag_motorGrabFullDown);
     }
 
-    AccelerationDist(81, 0.5,  min_speed_const,  min_speed_const, 0.02);
-    AccelerationDist(15, 0, min_speed_const, 11);
+    AccelerationDist(96, 0.2,  min_speed_const,  10, 0.04);
+
     preTurnStop();
     closeBall();
     startTask(normalizeCentMotor);
@@ -492,22 +493,24 @@ float LeftRoom(){
 }
 
 void fromFirstPairRoomsToFrames(){
-    AccelerationDist(BetweenSensorsAndMiddle);
-    preTurnStop(100);
-    TankTurn(90);
+    //AccelerationDist(BetweenSensorsAndMiddle);
+    //preTurnStop(100);
+    //TankTurn(90);
+    preTurnStop(90);
+    RightWheelTurn(100);
+	LeftWheelTurn(10);
     pr_error = 0;
-    AccelerationLinePID(320, 1, 0.7);
-    AccelerationLinePID(209, 0, 0.5, fabs(motor[leftMotor]));
+    AccelerationLinePID(250, 1, 0.7);
+    AccelerationLinePID(210, 0, 0.5, fabs(motor[leftMotor]));
     AccelerationDist(47, 0, fabs(motor[leftMotor]));
-    PointTurn(200, 0, 90, 1, 0.4);
+    PointTurn(200, 0, 90, 1, 0.5);
 }
 
 void fromSecondPairRoomsToFrames(){
-    AccelerationDist(BetweenSensorsAndMiddle);
-    preTurnStop();
-    TankTurn(90);
-    preTurnStop();
-    AccelerationLinePID(420, 1, 0.48);
+    preTurnStop(90);
+    RightWheelTurn(100);
+	LeftWheelTurn(10);
+    AccelerationLinePID(300, 1, 0.48);
     AccelerationDist(BetweenSensorsAndMiddle);
     preTurnStop();
     TankTurn(-20);
