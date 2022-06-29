@@ -76,7 +76,7 @@
 
       sprintf(rawResult,   "%f", rawValues[g]);
       sprintf(colorResult, "%d", colorValues[g]);
-      sprintf(number, "%d", g + 1);
+      sprintf(number,      "%d", g + 1);
 
       fileWriteData(fileHandle, frame,  strlen(frame) + 1);
       fileWriteData(fileHandle, number, strlen(number) + 1);
@@ -91,4 +91,60 @@
       fileWriteData(fileHandle, end, strlen(end) + 1);
     }
   }
+
+  void writeAccelerationInfo(long *speedValues, long *timeValues, long *accelerationValues, long *distanceValues){
+    
+  }
+
+  void writeIndicatorsExtended(long leftValue, long rightValue, short *rgbLeft, short *rgbRight){
+
+    char * left  = "Left Indicator:";
+    int strlen1 = strlen(left);
+    char * right = "Right Indicator:";
+    int strlen2 = strlen(right);
+
+    char  leftResult[10];
+    char rightResult[10];
+    char tempNumber[10];
+
+    sprintf(leftResult,  "%f", leftValue);
+    sprintf(rightResult, "%f", rightValue);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+
+    fileWriteData(fileHandle, left,  strlen1 + 1);
+
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+
+    for (int i = 0; i < 3; i++){
+      sprintf(tempNumber,  "%f", rgbLeft[i]);
+      fileWriteData(fileHandle, tempNumber, strlen(tempNumber) + 1);
+    }
+
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+
+    fileWriteData(fileHandle, leftResult, strlen(leftResult) + 1);
+
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+
+    fileWriteData(fileHandle, right, strlen2 + 1);
+
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    for (int i = 0; i < 3; i++){
+      sprintf(tempNumber,  "%f", rgbRight[i]);
+      fileWriteData(fileHandle, tempNumber, strlen(tempNumber) + 1);
+    }
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+
+    fileWriteData(fileHandle, rightResult, strlen(rightResult) + 1);
+
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+    fileWriteData(fileHandle, end, strlen(end) + 1);
+  }
+
 #endif

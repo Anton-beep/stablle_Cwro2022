@@ -204,3 +204,51 @@ void readLeftSen_noMoveRGB(int count_times, CalibrationHiTechData* calibration, 
 
 	ht_results[0] = (sum_rr + sum_gr + sum_br) / (count_times);
 }
+
+void ReadIndicatorExtended(short len_millimeters, short speed){
+	motor[motorA] = -speed;
+	motor[motorB] = speed;
+
+	float enc_left_motor = fabs(nMotorEncoder[leftMotor]);
+	float enc_right_motor = fabs(nMotorEncoder[rightMotor]);
+
+	float moved_motors = 0;
+	float now_millimeters = 0;
+	int counter = 0;
+	
+	int sum_rl = 0;
+	int sum_gl = 0;
+	int sum_bl = 0;
+
+	int sum_rr = 0;
+	int sum_gr = 0;
+	int sum_br = 0;
+	
+	while(now_millimeters < len_millimeters) {
+		readSensor(&colorLeftSensor,  &MarkerInfoRawLeft);
+		readSensor(&colorRightSensor, &MarkerInfoRawRight);
+
+		sum_rl += colorLeftSensor.red;
+		sum_gl += colorLeftSensor.green;
+		sum_bl += colorLeftSensor.blue;
+
+		sum_rr += colorRightSensor.red;
+		sum_gr += colorRightSensor.green;
+		sum_br += colorRightSensor.blue;
+
+		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
+		now_millimeters = DegreesToMillimeters(moved_motors);
+		counter ++;
+	}
+
+	rgbLeft[0] =  sum_rl / counter;
+	rgbLeft[1] =  sum_gl / counter;
+	rgbLeft[2] =  sum_bl / counter;
+
+	rgbRight[0] = sum_rr / counter;
+	rgbRight[1] = sum_gr / counter;
+	rgbRight[2] = sum_br / counter;
+
+	ht_results[0] = (sum_rl + sum_gl + sum_bl) / counter;
+	ht_results[1] = (sum_rr + sum_gr + sum_br) / counter;
+}

@@ -75,10 +75,10 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 260, 70, 1);
+    moveMotor(centMotor, 252, 70, 1);
     stopMotor(centMotor, 1);
     delay(25);
-    moveMotor(grabMotor, -140, -100, 0);
+    moveMotor(grabMotor, -130, -90, 0);
 
     taskFlag_BallDrop = 0;
     stopTask(BallDrop);
@@ -109,7 +109,7 @@ task normalizeCentMotor()
     float start_deg = fabs(nMotorEncoder[centMotor]);
     short sign =   getSign(nMotorEncoder[centMotor]);
     short deg = nMotorEncoder[centMotor] * -1;
-	motor[centMotor] = -25 * sign;
+	motor[centMotor] = -35 * sign;
 	while (MotorAbsMovedDegrees(centMotor, start_deg) < (fabs(deg))){
         if (getSign(nMotorEncoder[centMotor]) != sign){
             break;

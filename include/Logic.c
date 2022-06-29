@@ -75,6 +75,39 @@ float readIndicators(short preTurnmm = 18){
     #endif
 }
 
+float readIndicatorsExtended(short preTurnmm = 18){
+    #if TIMER == 1
+        float start_time = getTimerValue(T2);
+    #endif
+
+    AccelerationLinePID(110, 0, 0.01);
+    ReadIndicatorExtended(33, 15);
+
+    float enc_left_motor =   fabs(nMotorEncoder[leftMotor]);
+	float enc_right_motor = fabs(nMotorEncoder[rightMotor]);
+
+	float moved_motors = 0;
+	float now_millimeters = 0;
+
+    while(now_millimeters < preTurnmm) {
+		moved_motors = MotorsAbsMovedDegreesLR(enc_left_motor, enc_right_motor);
+		now_millimeters = DegreesToMillimeters(moved_motors);
+	}
+
+    left_room_indicator  = get_indicator_extended_color_left(ht_results[0], rgbLeft);
+    right_room_indicator = get_indicator_extended_color_left(ht_results[1], rgbRight);
+
+    #if LOGGING == 1
+        writeIndicatorsExtended(left_room_indicator,right_room_indicator, rgbLeft, rgbRight);
+    #endif
+
+    #if TIMER == 1
+        return getTimerValue(T2) - start_time;
+    #else
+        return 0;
+    #endif
+}
+
 void fromRightRoomToLeft(int degrees){
     if (now_cubes == 0){
         motor[grabMotor] = -60;
@@ -110,12 +143,13 @@ void fromRightRoomToLeft(int degrees){
 void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
     preTurnStop();
     TankTurn(angle);
-    preTurnStop();
 
     startTask(prepareForCube);
     startTask(motorGrabFullDown);
+    preTurnStop();
 
-    AccelerationDist(45, 0.04, min_speed_const, 10, 0.025);
+    AccelerationDist(25, 0, 15, 10, 0.004);
+    AccelerationDist(25, 0, 11, 9.5, 0.0001);
     preTurnStop(50);
 
     waitTask(&taskFlag_motorGrabFullDown);
@@ -173,7 +207,7 @@ void BallRightRoom(byte cube = 0){
     waitTask(&taskFlag_OneCubePreBall);
     waitTask(&taskFlag_prepareForBall);
 
-    AccelerationDist(85, 0.2,  min_speed_const,  10, 0.04);
+    AccelerationDist(85, 0.24, min_speed_const,  10.5, 0.04);
     preTurnStop();
     closeBall();
     startTask(normalizeCentMotor);
@@ -295,7 +329,7 @@ float RightRoom(){
         return 0;
     #endif
 }
-//key
+
 void BallLeftRoom(byte cube = 0){
     short add_angle = 0;
 
@@ -329,7 +363,7 @@ void BallLeftRoom(byte cube = 0){
         waitTask(&taskFlag_motorGrabFullDown);
     }
 
-    AccelerationDist(96, 0.2,  min_speed_const,  10, 0.04);
+    AccelerationDist(96, 0.22,  min_speed_const,  10.5, 0.04);
 
     preTurnStop();
     closeBall();
@@ -346,25 +380,25 @@ void BallLeftRoom(byte cube = 0){
     if ((now_cubes == 2) && (left_room_indicator == 2) && (cube)){
         TankTurn(-38);
         preTurnStop();
-        AccelerationDist(-25);
+        AccelerationDist(-45);
         preTurnStop();
 
         startTask(motorGrabFullDown);
-        motor[grabMotor] = -60;
-        delay(100);
-        motor[grabMotor] = 0;
         waitTask(&taskFlag_motorGrabFullDown);
 
+        AccelerationDist(30);
+        preTurnStop(100);
         motor[grabMotor] = 80;
-        delay(150);
+        delay(250);
         add_angle = 44;
         startTask(normalizeCentMotor);
-        delay(200);
+        delay(300);
+        stopMotor(grabMotor, 1);
         motor[grabMotor] = 0;
         short buffer = cubes[0];
         cubes[0] = cubes[1];
         cubes[1] = buffer;
-        AccelerationDist(25);
+        AccelerationDist(15);
         preTurnStop();
     }
     else{
@@ -493,16 +527,13 @@ float LeftRoom(){
 }
 
 void fromFirstPairRoomsToFrames(){
-    //AccelerationDist(BetweenSensorsAndMiddle);
-    //preTurnStop(100);
-    //TankTurn(90);
     preTurnStop(90);
     RightWheelTurn(100);
 	LeftWheelTurn(10);
     pr_error = 0;
     AccelerationLinePID(250, 1, 0.7);
     AccelerationLinePID(210, 0, 0.5, fabs(motor[leftMotor]));
-    AccelerationDist(47, 0, fabs(motor[leftMotor]));
+    AccelerationDist(50, 0, fabs(motor[leftMotor]));
     PointTurn(200, 0, 90, 1, 0.5);
 }
 
