@@ -231,17 +231,10 @@ void BallRightRoom(byte cube = 0){
 
 void fromFramesToSecondPairRooms(){
     preTurnStop();
-    AbsTurn(224.5);
+    AbsTurn(180);
     preTurnStop();
-    AccelerationDist(230);
-    motor[leftMotor] = -12;
-    motor[rightMotor] = 12;
-    results_sensors.firstSensor = 100;
-    while (results_sensors.firstSensor > 20){
-        SensorsToPercent();
-    }
-    preTurnStop();
-    RightWheelTurn(28);
+    AccelerationLinePID(30);
+    PointTurn(200, 0, 90, 1, 0.5);
     AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
     LeftWheelTurn(17);
     preTurnStop(50);

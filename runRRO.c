@@ -43,11 +43,13 @@ task main()
 		calibrateLeftRightHT(&colorLeftSensor, &colorRightSensor, &FamesRawRight);
 	#endif
 
+	/*
 	AccelerationLinePID(100, 1);
 	readIndicatorsExtended(0);
 	preTurnStop(100);
 	fileClose(fileHandle);
-	preTurnStop(2000000000000009000)
+	preTurnStop(2000000000000009000);
+  */
 
 	motor[grabMotor] = -30;
 	TakeBottles();

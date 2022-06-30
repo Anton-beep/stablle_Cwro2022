@@ -21,11 +21,11 @@ const float axleTrack = 178;
 const float wheelDiameter = 80.1;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor =  2260;
-const float right_min_sensor = 2272;
+const float left_min_sensor =  2404;
+const float right_min_sensor = 2404;
 
-const float left_max_sensor = 1656;
-const float right_max_sensor = 1684;
+const float left_max_sensor = 1720;
+const float right_max_sensor = 1794;
 
 const float max_speed_const = 80;
 const float min_speed_const = 15;
