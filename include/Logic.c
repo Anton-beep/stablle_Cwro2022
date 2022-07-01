@@ -20,13 +20,13 @@ float TakeBottles(){
     AccelerationDist(50, 0, motor[rightMotor]);
 
     preTurnStop();
-    AccelerationDist(-160);
+    AccelerationDist(-150, 0.4);
 
     startTask(setNormAfterWaterFullDown);
     preTurnStop();
 
-    AccelerationLinePID(80);
-    AccelerationDist(15);
+    AccelerationLinePID(70);
+    AccelerationDist(25);
 
     PointTurn(250, 0, 90, 1);
 
@@ -117,27 +117,15 @@ void fromRightRoomToLeft(int degrees){
         startTask(OneCubePreBall);
     }
 
-    AccelerationLinePID(degrees - 10, 0, 0.7, min_speed_const, acceleration - 0.01, 82, 0, 0, 10);
-
-    float speed = fabs(motor[leftMotor]);
-
-    while ((results_sensors.firstSensor > 50) || (results_sensors.secondSensor > 50)){
-		DrivePID(speed, 82, 0, 0);
-    }
+    AccelerationLinePID(degrees - 10, 1, 0.6, min_speed_const, acceleration - 0.01, 82, 0, 0, 10);
 
     if (now_cubes == 0){
         motor[grabMotor] = 0;
     }
-    
-    AccelerationDist(30, 0.7, speed);
-    
-    speed = fabs(motor[leftMotor]);
 
-    AccelerationLinePID(170, 0.82, 0, speed, acceleration, 82, 0, 0, 10);
+    AccelerationLinePID(200, 0, 0.5, min_speed_const + 2, acceleration - 0.01, 82, 0, 0, 10);
 
-    speed = fabs(motor[leftMotor]);
-
-    AccelerationDist(203, 0, speed);
+    AccelerationDist(203, 0.35);
 }
 
 void getCube(short angle = 90){ // 1 - Right room, -1 - Left room
@@ -233,8 +221,8 @@ void fromFramesToSecondPairRooms(){
     preTurnStop();
     AbsTurn(180);
     preTurnStop();
-    AccelerationLinePID(30);
-    PointTurn(200, 0, 90, 1, 0.5);
+    AccelerationLinePID(20);
+    PointTurn(200, 0, 88, 1, 0.5);
     AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
     LeftWheelTurn(17);
     preTurnStop(50);
@@ -275,16 +263,15 @@ void WaterRightRoom(byte cube = 0){
 
     AccelerationDist(50);
     startTask(normalizeCentMotor);
-    preTurnStop();
 
     if (right_bottle){
-        LeftWheelTurn(-69);
+        LeftWheelTurn(-65);
         AccelerationDist(75);
         right_bottle = 0;
     }
     else {
         RightWheelTurn(25);
-        LeftWheelTurn(-93);
+        LeftWheelTurn(-99);
         AccelerationDist(130);
         left_bottle = 0;
     }
@@ -383,7 +370,7 @@ void BallLeftRoom(byte cube = 0){
         preTurnStop(100);
         motor[grabMotor] = 80;
         delay(250);
-        add_angle = 44;
+        add_angle = 41;
         startTask(normalizeCentMotor);
         delay(300);
         stopMotor(grabMotor, 1);
@@ -399,7 +386,7 @@ void BallLeftRoom(byte cube = 0){
         preTurnStop();
     }
 
-    TankTurn(116 + add_angle);
+    TankTurn(112 + add_angle);
     preTurnStop();
     waitTask(&taskFlag_normalizeCentMotor);
     AccelerationDist(115);
@@ -444,15 +431,15 @@ void WaterLeftRoom(byte cube = 0){
     AccelerationDist(50);
     motor[centMotor] = 0;
     startTask(normalizeCentMotor);
-    preTurnStop();
+
     if (left_bottle){
-        RightWheelTurn(-69);
+        RightWheelTurn(-66);
         AccelerationDist(75);
         left_bottle = 0;
     }
     else {
         LeftWheelTurn(25);
-        RightWheelTurn(-93);
+        RightWheelTurn(-99);
         AccelerationDist(130);
         right_bottle = 0;
     }
@@ -524,10 +511,10 @@ void fromFirstPairRoomsToFrames(){
     RightWheelTurn(100);
 	LeftWheelTurn(10);
     pr_error = 0;
-    AccelerationLinePID(250, 1, 0.7);
-    AccelerationLinePID(210, 0, 0.5, fabs(motor[leftMotor]));
-    AccelerationDist(50, 0, fabs(motor[leftMotor]));
-    PointTurn(200, 0, 90, 1, 0.5);
+    AccelerationLinePID(250, 1, 0.5);
+    AccelerationLinePID(210, 0, 0.5);
+    AccelerationDist(55, 0, fabs(motor[leftMotor]));
+    PointTurn(200, 0, 89.5, 1, 0.4);
 }
 
 void fromSecondPairRoomsToFrames(){
@@ -735,7 +722,7 @@ void finish(){
     waitTask(&taskFlag_motorWaterFullDown);
     startTask(normalizeCentMotor);
     AccelerationLinePID(105);
-    AccelerationDist(225);
+    AccelerationDist(215);
     preTurnStop();
     TankTurn(45);
     preTurnStop();

@@ -1,5 +1,5 @@
 #define TIMER 0
-#define LOGGING 1
+#define LOGGING 0
 #define DEBUG 0
 #define CALIBRATE 0
 
@@ -9,11 +9,11 @@ const float Kd_norm = 17;
 
 const float oneSensorCof = 1.75;
 
-const float Kp_tacho = 3.5;
+const float Kp_tacho = 2.5;
 const float Ki_tacho = 0.001;
-const float Kd_tacho = 18;
+const float Kd_tacho = 17;
 
-const float Kp_tank = 1;
+const float Kp_tank = 0.73;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -21,16 +21,19 @@ const float axleTrack = 178;
 const float wheelDiameter = 80.1;
 const float BetweenSensorsAndMiddle = 75.5;
 
-const float left_min_sensor =  2404;
-const float right_min_sensor = 2404;
+const float BetweenHTAndWheels = 57;
+const float BetweenHTNXT = 124;
 
-const float left_max_sensor = 1720;
-const float right_max_sensor = 1794;
+const float left_min_sensor =  2516;
+const float right_min_sensor = 2496;
+
+const float left_max_sensor = 1752;
+const float right_max_sensor = 1800;
 
 const float max_speed_const = 80;
 const float min_speed_const = 15;
 
-const float acceleration = 0.05;
+const float acceleration = 0.065;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;
@@ -44,7 +47,7 @@ short bibob = 0;
 short rgbLeft[3] = {0, 0, 0};
 short rgbRight[3] = {0, 0, 0};
 
-const float acceleration_turn = 0.04;
+const float acceleration_turn = 0.05;
 
 byte left_bottle  = 1;
 byte right_bottle = 1;
