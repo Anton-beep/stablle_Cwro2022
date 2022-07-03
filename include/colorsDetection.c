@@ -66,6 +66,18 @@ int get_colorFrame_second(int rawHTRes){
     }
 }
 
+int get_colorFrame_third(int rawHTRes){
+    if (rawHTRes > 22){ // 32 36
+        return 4;
+    }
+    else if (rawHTRes > 8){
+        return 1;
+    }
+    else{
+        return 5;
+    }
+}
+
 short get_wash_color_right(int rawHTRes){
     if (rawHTRes < 10){
         return 0;

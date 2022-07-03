@@ -3,11 +3,6 @@ float TakeBottles(){
         float start_time = getTimerValue(T2);
     #endif
 
-    TankTurn(45);
-    preTurnStop();
-    AccelerationDist(100, 1);
-    AccelerationLinePID(160, 1, 0, motor[rightMotor]);
-
     preTurnStop();
 
     TankTurn(180);
@@ -36,6 +31,126 @@ float TakeBottles(){
         return getTimerValue(T2) - start_time;
     #else
         return 0;
+    #endif
+}
+
+void fromFramesToFirstPairRooms(){
+    preTurnStop(90);
+    AbsTurn(180);
+    AccelerationLinePID(40);
+    AccelerationDist(15);
+    PointTurn(-200, 0, -89.5, 1, 0.4);
+    AccelerationLinePID(250, 1);
+
+}
+
+void fromFramesToSecondPairRooms(){
+    preTurnStop();
+    AbsTurn(180);
+    preTurnStop();
+    AccelerationLinePID(23);
+    PointTurn(200, 0, 88, 1, 0.5);
+    AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
+    LeftWheelTurn(17);
+    preTurnStop(50);
+    AccelerationLinePID(100, 1);
+}
+
+void getInsideRight(){
+    AccelerationLinePID(160, 0, 0);
+    preTurnStop();
+    RightWheelTurn(90);
+
+    AccelerationLinePID(47, 0, 0, 10, acceleration, 0, 82, 0, 10);
+
+    AccelerationDist(187, 0.4);
+}
+
+void getInsideLeft(){
+    AccelerationLinePID(160, 0, 0);
+    preTurnStop();
+    LeftWheelTurn(90);
+    AccelerationLinePID(47, 0, 0, 10, acceleration, 82, 0, 0, 10);
+
+    AccelerationDist(187, 0.4);
+}
+
+void fromFirstPairRoomsToFrames(){
+    preTurnStop(90);
+    RightWheelTurn(100);
+	LeftWheelTurn(10);
+    pr_error = 0;
+    AccelerationLinePID(250, 1, 0.5);
+    AccelerationLinePID(210, 0, 0.5);
+    AccelerationDist(55, 0, fabs(motor[leftMotor]));
+    PointTurn(200, 0, 89.5, 1, 0.4);
+}
+
+
+void fromSecondPairRoomsToFrames(){
+    preTurnStop(90);
+    RightWheelTurn(100);
+	LeftWheelTurn(10);
+    AccelerationLinePID(300, 1, 0.48);
+    AccelerationDist(BetweenSensorsAndMiddle);
+    preTurnStop();
+    TankTurn(-20);
+    preTurnStop();
+    AccelerationDist(423);
+    preTurnStop();
+    TankTurn(-70);
+    preTurnStop();
+    AccelerationLinePID(60, 1);
+    NOW_ANGLE = 360;
+}
+
+void readFramesStart(){
+    TankTurn(45);
+    preTurnStop();
+    AccelerationDist(100, 1);
+    AccelerationLinePID(160, 1, 0, motor[rightMotor]);
+    preTurnStop();
+
+    TankTurn(-73);
+
+    preTurnStop(100);
+    readRightSen_noMove(20, &FamesRawRight, 5);
+
+    framesColor[0] = get_colorFrame_first(ht_results[1]);
+    rawFrames[0] = ht_results[1];
+
+    TankTurn(-35);
+
+    preTurnStop(100);
+    readRightSen_noMove(20, &FamesRawRight, 5);
+    framesColor[1] = get_colorFrame_second(ht_results[1]);
+    rawFrames[1] = ht_results[1];
+
+    framesColor[2] = (10 - framesColor[0] - framesColor[1]);
+
+    TankTurn(181);
+
+    preTurnStop(100);
+    readLeftSen_noMove(20, &FamesRawRight, 5);
+    framesColor[2] = get_colorFrame_third(ht_results[0]);
+    rawFrames[2] = ht_results[0];
+
+    NOW_ANGLE = 360;
+
+    TankTurn(107.8);
+
+    Kp_norm = 0.56;
+    AccelerationDist(-40, 0);
+    preTurnStop(280);
+    AccelerationLinePID(90, 0);
+    Kp_norm = 0.42;
+
+    AccelerationDist(320);
+    AccelerationLinePID(40, 1);
+    preTurnStop();
+
+    #if LOGGING == 1
+        writeFramesInfo(rawFrames, framesColor);
     #endif
 }
 
@@ -188,7 +303,6 @@ void BallRightRoom(byte cube = 0){
         startTask(motorGrabFullDown);
         TankTurn(37);
         preTurnStop();
-        add_angle = -3;
     }
 
     waitTask(&taskFlag_motorGrabFullDown);
@@ -215,18 +329,6 @@ void BallRightRoom(byte cube = 0){
 
     AccelerationDist(115);
     fromRightRoomToLeft(160);
-}
-
-void fromFramesToSecondPairRooms(){
-    preTurnStop();
-    AbsTurn(180);
-    preTurnStop();
-    AccelerationLinePID(20);
-    PointTurn(200, 0, 88, 1, 0.5);
-    AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
-    LeftWheelTurn(17);
-    preTurnStop(50);
-    AccelerationLinePID(100, 1);
 }
 
 void WaterRightRoom(byte cube = 0){
@@ -289,7 +391,16 @@ float RightRoom(){
     readRightSen_noMoveRGB(20, &WashInfoRawRight, 5);
     
     short cube = get_wash_color_right(ht_results[1]);
-    cubes[0] = cube;
+
+    if (((cube != framesColor[0]) && (cube != framesColor[1]) && (cube != framesColor[2])) && cube != 0){
+        cube = 0;
+        additional_room = way;
+        playSound(soundBeepBeep);
+    }
+    else{
+        cubes[0] = cube;
+    }
+    
 
     AccelerationDist(-39, 0);
     if (right_room_indicator == 2){
@@ -386,7 +497,7 @@ void BallLeftRoom(byte cube = 0){
         preTurnStop();
     }
 
-    TankTurn(112 + add_angle);
+    TankTurn(119 + add_angle);
     preTurnStop();
     waitTask(&taskFlag_normalizeCentMotor);
     AccelerationDist(115);
@@ -462,7 +573,15 @@ float LeftRoom(){
 
     short cube = get_wash_color_left(ht_results[0]);
 
-    cubes[1] = cube;
+    if (((cube != framesColor[0]) && (cube != framesColor[1]) && (cube != framesColor[2])) && cube != 0){
+        cube = 0;
+        additional_room = way;
+        playSound(soundBeepBeep);
+    }
+    else{
+        cubes[1] = cube;
+    }
+    
     short add_deg = 0;
     if ((now_cubes) && (left_room_indicator == 2) && (cube)){
         AccelerationDist(30, 0);
@@ -506,33 +625,6 @@ float LeftRoom(){
     #endif
 }
 
-void fromFirstPairRoomsToFrames(){
-    preTurnStop(90);
-    RightWheelTurn(100);
-	LeftWheelTurn(10);
-    pr_error = 0;
-    AccelerationLinePID(250, 1, 0.5);
-    AccelerationLinePID(210, 0, 0.5);
-    AccelerationDist(55, 0, fabs(motor[leftMotor]));
-    PointTurn(200, 0, 89.5, 1, 0.4);
-}
-
-void fromSecondPairRoomsToFrames(){
-    preTurnStop(90);
-    RightWheelTurn(100);
-	LeftWheelTurn(10);
-    AccelerationLinePID(300, 1, 0.48);
-    AccelerationDist(BetweenSensorsAndMiddle);
-    preTurnStop();
-    TankTurn(-20);
-    preTurnStop();
-    AccelerationDist(423);
-    preTurnStop();
-    TankTurn(-70);
-    preTurnStop();
-    AccelerationLinePID(60, 1);
-    NOW_ANGLE = 360;
-}
 
 void drop1in1(){
     AbsTurn(90);
@@ -667,9 +759,6 @@ void readFrames(){
 
 void frames(short reading = 1){
     preTurnStop(150);
-    if (reading){
-        readFrames();
-    }
 
     AccelerationDist(-20, 0);
     preTurnStop();
@@ -714,7 +803,6 @@ void frames(short reading = 1){
 void finish(){
     preTurnStop();
     AbsTurn(180);
-    startTask(motorWaterFullDown);
     preTurnStop();
     delay(300);
     AccelerationDist(-60);
@@ -727,4 +815,103 @@ void finish(){
     TankTurn(45);
     preTurnStop();
     AccelerationDist(10);
+}
+
+void getBall(){
+    if ((additional_room == 0) || (additional_room == 1)){
+        fromFramesToFirstPairRooms();
+    }
+    else{
+        fromFramesToSecondPairRooms();
+    }
+    
+    
+    if ((additional_room == 0) || (additional_room == 2)){
+        getInsideRight();
+        preTurnStop(50);
+        startTask(motorGrabFullDown);
+        TankTurn(43);
+        preTurnStop();
+        waitTask(&taskFlag_motorGrabFullDown);
+        AccelerationDist(63, 0.22,  min_speed_const,  10.5, 0.04);
+        preTurnStop();
+        closeBall();
+        startTask(normalizeCentMotor);
+        TankTurn(180);
+        preTurnStop();
+        AccelerationDist(63);
+        preTurnStop();
+        TankTurn(-43.3);
+        preTurnStop();
+        AccelerationDist(190);
+
+        AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration - 0.01, 70, 0, 0, 10);
+
+        preTurnStop(90);
+        LeftWheelTurn(100);
+        RightWheelTurn(10);
+    }
+    else{
+        getInsideLeft();
+        preTurnStop(50);
+        startTask(motorGrabFullDown);
+        TankTurn(-43);
+        preTurnStop();
+        waitTask(&taskFlag_motorGrabFullDown);
+        AccelerationDist(63, 0.22,  min_speed_const,  10.5, 0.04);
+        preTurnStop();
+        closeBall();
+        startTask(normalizeCentMotor);
+        TankTurn(180);
+        preTurnStop();
+        AccelerationDist(63);
+        preTurnStop();
+        TankTurn(43.3);
+        preTurnStop();
+        AccelerationDist(190);
+
+        AccelerationLinePID(25, 1, 0.5, min_speed_const, acceleration, 0, 70, 0, 10);
+
+        preTurnStop(90);
+        RightWheelTurn(100);
+        LeftWheelTurn(10);
+    }
+    
+
+    if ((additional_room == 0) || (additional_room == 1)){
+        pr_error = 0;
+        AccelerationLinePID(250, 1, 0.5);
+        AccelerationLinePID(210, 0, 0.5);
+        AccelerationDist(55, 0, fabs(motor[leftMotor]));
+        PointTurn(200, 0, 89.5, 1, 0.4);
+    }
+    else{
+        AccelerationLinePID(300, 1, 0.48);
+        AccelerationDist(BetweenSensorsAndMiddle);
+        preTurnStop();
+        TankTurn(-20);
+        preTurnStop();
+        AccelerationDist(423);
+        preTurnStop();
+        TankTurn(-70);
+        preTurnStop();
+        NOW_ANGLE = 360;
+    }
+
+    AccelerationLinePID(20, 1, 0);
+    preTurnStop(150);
+    AccelerationDist(-10, 0);
+    preTurnStop();
+    NOW_ANGLE = 360;    
+
+    if (framesColor[0] == framesColor[1])
+        drop1in2();
+    else if (framesColor[0] == framesColor[2]) {
+        drop1in3();
+    }
+    else if (framesColor[1] == framesColor[2]) {
+        drop1in3();
+    }
+
+    finish();
 }

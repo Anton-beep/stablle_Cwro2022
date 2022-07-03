@@ -75,11 +75,11 @@ task BallDrop(){
     taskFlag_BallDrop = 1;
 
     stopMotor(centMotor, 1);
-    moveMotor(centMotor, 235, 70, 1);
+    moveMotor(centMotor, 212, 70, 1);
     stopMotor(centMotor, 1);
     delay(25);
     moveMotor(grabMotor, -130, -90, 0);
-
+    delay(100);
     taskFlag_BallDrop = 0;
     stopTask(BallDrop);
 }
@@ -96,7 +96,7 @@ task OneCubePreBall(){
     }
     stopMotor(grabMotor, 1);
 
-    moveMotor(grabMotor, -250, -100, 1);
+    moveMotor(grabMotor, -235, -100, 1);
 
     taskFlag_OneCubePreBall = 0;
 }

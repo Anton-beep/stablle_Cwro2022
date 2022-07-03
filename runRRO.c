@@ -28,7 +28,7 @@ task main()
 {
 	setSoundVolume(10);
 	check_battery();
-	setSoundVolume(10);
+	setSoundVolume(100);
 	stopMotor(grabMotor, 1);
 
 	InitMarkerCallibrationRaw();
@@ -51,18 +51,27 @@ task main()
 	preTurnStop(2000000000000009000);
   */
 
-	motor[grabMotor] = -30;
-	TakeBottles();
+  readFramesStart();
+  motor[grabMotor] = -30;
+  TakeBottles();
 	motor[grabMotor] = 0;
 	nMotorEncoder[grabMotor] = 0;
 	stopMotor(grabMotor, 0);
 
+
 	readIndicators(20);
+
+	way = 0;
 	RightRoom();
+
+	way = 1;
 	LeftRoom();
+
+
 	fromFirstPairRoomsToFrames();
 	AccelerationLinePID(20, 1, 0);
 	frames();
+	way++;
 	bibob++;
 	now_cubes = 0;
 	cubes[0] = 0;
@@ -70,14 +79,22 @@ task main()
 	fromFramesToSecondPairRooms();
 	stopMotor(grabMotor, 0);
 	readIndicators(16);
+
+	way = 2;
 	RightRoom();
+
+	way = 3;
 	LeftRoom();
+
 	fromSecondPairRoomsToFrames();
 	frames(0);
-	finish();
+	getBall();
 	BrakeLeftRightMotor(1);
+	eraseDisplay();
 
-	sleep(2000);
+	displayTextLine(6, "%d", additional_room);
+
+	sleep(3000);
 	#if LOGGING == 1
 		fileClose(fileHandle);
 	#endif

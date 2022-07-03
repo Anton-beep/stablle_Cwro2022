@@ -1,19 +1,21 @@
 #define TIMER 0
-#define LOGGING 0
+#define LOGGING 1
 #define DEBUG 0
 #define CALIBRATE 0
 
-const float Kp_norm = 0.3;
+short additional_room = 0;
+short way = 0;
+float Kp_norm = 0.42;
 const float Ki_norm = 0.001;
-const float Kd_norm = 17;
+const float Kd_norm = 18;
 
 const float oneSensorCof = 1.75;
 
-const float Kp_tacho = 2.5;
+const float Kp_tacho = 3;
 const float Ki_tacho = 0.001;
 const float Kd_tacho = 17;
 
-const float Kp_tank = 0.73;
+const float Kp_tank = 0.74;
 const float Ki_tank = 0.001;
 const float Kd_tank = 15;
 
@@ -24,11 +26,11 @@ const float BetweenSensorsAndMiddle = 75.5;
 const float BetweenHTAndWheels = 57;
 const float BetweenHTNXT = 124;
 
-const float left_min_sensor =  2516;
-const float right_min_sensor = 2496;
+const float left_min_sensor =  2508;
+const float right_min_sensor = 2524;
 
-const float left_max_sensor = 1752;
-const float right_max_sensor = 1800;
+const float left_max_sensor = 1808;
+const float right_max_sensor = 1680;
 
 const float max_speed_const = 80;
 const float min_speed_const = 15;
