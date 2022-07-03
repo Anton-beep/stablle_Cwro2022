@@ -1,28 +1,17 @@
 void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short reverse = 0){
 	SensorsToPercent();
-
-	float actionP = 0;
-	float actionI = 0;
-	float actionD = 0;
-	float error = results_sensors.secondSensor - results_sensors.firstSensor;
-	float steer = 0;
-
-
-	actionP = error * Kp_norm;
-	actionI = (error + pr_error) * Ki_norm;
-	actionD = (error - pr_error) * Kd_norm;
 	
-	if (results_sensors.secondSensor + results_sensors.firstSensor == 0){
-		steer = 0;
-	}
-	else{
-		steer = (actionP + actionI + actionD) / (results_sensors.secondSensor + results_sensors.firstSensor) * 70
-	}
+	float pr_error = error;
+	float error = results_sensors.firstSensor - results_sensors.secondSensor;
 
-	pr_error = error;
+	float steer = error * Kp_norm + (error - pr_error) * Kd_norm;
 
-	motor[leftMotor] = -speed + steer;
-	motor[rightMotor] = speed + steer;
+	float speedA = 0.15 * steer + 0.85 * (100 - fabs(steer));
+	float speedB = -0.15 * steer + 0.85 * (100 - fabs(steer));
+	float wtf = speed / max2(fabs(speedA), fabs(speedB));
+
+	motor[leftMotor] = -speedA * wtf;
+	motor[rightMotor] =  speedB * wtf;
 }
 
 void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration, float firstElement = 0, float secondElement = 0, short reverse = 1, short min_speed = min_speed_const){

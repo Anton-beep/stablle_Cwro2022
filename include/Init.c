@@ -5,10 +5,10 @@
 
 short additional_room = 0;
 short way = 0;
-float Kp_norm = 0.5;
+float Kp_norm = 0.2;
 const float Ki_norm = 0.001;
-const float Kd_norm = 20;
-
+const float Kd_norm = 6;
+float error  = 0; 
 const float oneSensorCof = 1.75;
 
 const float Kp_tacho = 3;

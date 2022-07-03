@@ -10,6 +10,7 @@
 
 //#include "header/hitechnic-EOPD.h"
 #include "header/hitechnic-colour-v2.h"
+#include "common.h"
 #include <include/Init.c>
 #include "header/logging.h"
 #include <include/SensorsTools.c>
@@ -45,7 +46,7 @@ task main()
 	#endif
 
 	while(1){
-		DrivePID(60);
+		DrivePID(20);
 	}
 
 
