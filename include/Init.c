@@ -5,9 +5,9 @@
 
 short additional_room = 0;
 short way = 0;
-float Kp_norm = 0.42;
+float Kp_norm = 0.5;
 const float Ki_norm = 0.001;
-const float Kd_norm = 18;
+const float Kd_norm = 20;
 
 const float oneSensorCof = 1.75;
 
@@ -26,16 +26,16 @@ const float BetweenSensorsAndMiddle = 75.5;
 const float BetweenHTAndWheels = 57;
 const float BetweenHTNXT = 124;
 
-const float left_min_sensor =  2508;
-const float right_min_sensor = 2524;
+const float left_min_sensor =  2540;
+const float right_min_sensor = 2526;
 
-const float left_max_sensor = 1808;
-const float right_max_sensor = 1680;
+const float left_max_sensor = 1856;
+const float right_max_sensor = 1752;
 
 const float max_speed_const = 80;
 const float min_speed_const = 15;
 
-const float acceleration = 0.065;
+const float acceleration = 0.045;
 
 long left_room_indicator = -1;
 long right_room_indicator = -1;

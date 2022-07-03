@@ -1,47 +1,28 @@
 void DrivePID(int speed, float firstElement = 0, float secondElement = 0, short reverse = 0){
 	SensorsToPercent();
 
-	short flag = 0;
-	if ((firstElement == 0) && (secondElement == 0)){
-		flag = 1;
-	}
-
-	firstElement =  firstElement  ? firstElement  : results_sensors.firstSensor;
-	secondElement = secondElement ? secondElement : results_sensors.secondSensor;
-
-	float error = reverse ? secondElement - firstElement : firstElement - secondElement;
-	float cof = 1;
-
-	if (speed < 50){
-		cof = 0.7;
-	}
-	if (speed < 30){
-		cof = 0.65;
-	}
-	if (speed < 20){
-		cof = 0.75;
-	}
-
 	float actionP = 0;
 	float actionI = 0;
 	float actionD = 0;
-	if (flag){
-		actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof;
-		actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof;
-		actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof;
+	float error = results_sensors.secondSensor - results_sensors.firstSensor;
+	float steer = 0;
+
+
+	actionP = error * Kp_norm;
+	actionI = (error + pr_error) * Ki_norm;
+	actionD = (error - pr_error) * Kd_norm;
+	
+	if (results_sensors.secondSensor + results_sensors.firstSensor == 0){
+		steer = 0;
 	}
 	else{
-		actionP = error * Kp_norm *              (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
-		actionI = (error + pr_error) * Ki_norm * (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
-		actionD = (error - pr_error) * Kd_norm * (speed / (max_speed_const - min_speed_const)) * cof * oneSensorCof;
+		steer = (actionP + actionI + actionD) / (results_sensors.secondSensor + results_sensors.firstSensor) * 70
 	}
-	
-	float steer = actionP + actionI + actionD;
+
 	pr_error = error;
 
 	motor[leftMotor] = -speed + steer;
 	motor[rightMotor] = speed + steer;
-	delay(2);
 }
 
 void AccelerationLinePID (float len_millimeters, int line_stop = 0, float speed_up_part = 0.5, float start_speed = min_speed_const, float accel = acceleration, float firstElement = 0, float secondElement = 0, short reverse = 1, short min_speed = min_speed_const){

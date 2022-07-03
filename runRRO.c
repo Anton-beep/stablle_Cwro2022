@@ -29,6 +29,7 @@ task main()
 	setSoundVolume(10);
 	check_battery();
 	setSoundVolume(100);
+
 	stopMotor(grabMotor, 1);
 
 	InitMarkerCallibrationRaw();
@@ -43,58 +44,11 @@ task main()
 		calibrateLeftRightHT(&colorLeftSensor, &colorRightSensor, &FamesRawRight);
 	#endif
 
-	/*
-	AccelerationLinePID(100, 1);
-	readIndicatorsExtended(0);
-	preTurnStop(100);
-	fileClose(fileHandle);
-	preTurnStop(2000000000000009000);
-  */
-
-  readFramesStart();
-  motor[grabMotor] = -30;
-  TakeBottles();
-	motor[grabMotor] = 0;
-	nMotorEncoder[grabMotor] = 0;
-	stopMotor(grabMotor, 0);
+	while(1){
+		DrivePID(60);
+	}
 
 
-	readIndicators(20);
-
-	way = 0;
-	RightRoom();
-
-	way = 1;
-	LeftRoom();
-
-
-	fromFirstPairRoomsToFrames();
-	AccelerationLinePID(20, 1, 0);
-	frames();
-	way++;
-	bibob++;
-	now_cubes = 0;
-	cubes[0] = 0;
-	cubes[1] = 0;
-	fromFramesToSecondPairRooms();
-	stopMotor(grabMotor, 0);
-	readIndicators(16);
-
-	way = 2;
-	RightRoom();
-
-	way = 3;
-	LeftRoom();
-
-	fromSecondPairRoomsToFrames();
-	frames(0);
-	getBall();
-	BrakeLeftRightMotor(1);
-	eraseDisplay();
-
-	displayTextLine(6, "%d", additional_room);
-
-	sleep(3000);
 	#if LOGGING == 1
 		fileClose(fileHandle);
 	#endif
